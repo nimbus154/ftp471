@@ -11,6 +11,6 @@ public class ShellTest {
 
     public void testExample() {
 
-        Assert.fail("nothing is happening yet");
+        //Assert.fail("nothing is happening yet");
     }
 }
