@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: cpsc471.ftp.server.control.ControlWorkerTest
+-------------------------------------------------------------------------------
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
