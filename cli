@@ -1,0 +1,2 @@
+#!/bin/bash
+java -jar ftp-client/target/ftp-client-1.0-SNAPSHOT.jar
