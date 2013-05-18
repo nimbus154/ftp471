@@ -62,16 +62,32 @@ public class Shell {
         this.client = client;
     }
 
+    /**
+     * Runs the interactive ftp loop
+     */
     public void run() {
 
         Scanner inputReader = new Scanner(System.in);
         while(true) {
             System.out.print("ftp> "); // prompt
-            String inputLine = inputReader.nextLine();
 
-            System.out.println("You entered " + inputLine);
-            Scanner lineReader = new Scanner(inputLine);
+            // get user input
+            String[] input = inputReader.nextLine().split(" ");
+
+            if(invokeCmd(input) == false) {
+                break;
+            }
         }
+    }
+
+    /**
+     * Attempt to invoke the command entered by the user
+     * @param args args to pass to command, including the command itself
+     * @return true if the run loop should continue
+     */
+    public boolean invokeCmd(String[] args) {
+
+        return false;
     }
 
     // endregion
