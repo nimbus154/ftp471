@@ -34,7 +34,7 @@ Each message type has predetermined format for the data portion of the message.
 A ten-byte string describing the action the server will take in response to the
 request.
 
-##### `quit` Command
+##### `quit` Message
 `quit` is the simplest message. It consists of only a the message type. No data
 is transferred with it.
 Message type: quit
@@ -51,10 +51,11 @@ quit
 closed
 ```
 
-##### `get` message
+##### `get` Message
 Message type: get
 Size: size in bytes of arguments that follow
-Data: [name of file to retrieve] [ephermal port to use for file transfer]
+Data: [name of file to retrieve] [ephermal port to use for file transfer, in
+ASCII]
 
 Data fields are delimited by spaces.
 
@@ -73,10 +74,10 @@ connecting
 
 If no file with that name exists, the server reponds with a `not found` message.
 
-##### `put` message
+##### `put` Message
 Message type: put
 Size: size in bytes of arguments that follow
-Data: [name of file to upload] [ephermal port to use for file transfer]
+Data: [name of file to upload] [ephermal port to use for file transfer, in ASCII]
 
 Data fields are delimited by spaces.
 
@@ -96,6 +97,67 @@ connecting
 If a file with that name already exists on the server, the file will be
 overwritten.
 
+##### `ls` Message
+Message type: ls
+Size: size in bytes of arguments that follow
+Data: [ephermal port to use for file transfer, in ASCII]
+
+Data fields are delimited by spaces.
+
+The server responds by attempting to connect to the client on the ephemeral
+port.
+
+###### Client Request
+```
+put secret_knowledge.txt 1234
+```
+
+###### Server Response
+```
+connecting
+```
+
+If a file with that name already exists on the server, the file will be
+overwritten.
+
+##### `ls` Message
+Message type: ls
+Size: [ignored by server]
+Data: [e
+
+The server responds by attempting to connect to the client on the ephemeral
+port.
+
+###### Client Request
+```
+put secret_knowledge.txt 1234
+```
+
+###### Server Response
+```
+connecting
+```
+### Data Channel
+The data channel is where fiels are actually transferred. At this time, I'm not
+exactly sure how this will work. Since it uses sendfile, I don't think this will
+be as involved.
+
+I must handle: 
+ * throttling sender
+ * errors in file transfer
+
+The server responds by attempting to connect to the client on the ephemeral
+port.
+
+###### Client Request
+```
+put secret_knowledge.txt 1234
+```
+
+###### Server Response
+```
+connecting
+```
 ### Data Channel
 The data channel is where fiels are actually transferred. At this time, I'm not
 exactly sure how this will work. Since it uses sendfile, I don't think this will
