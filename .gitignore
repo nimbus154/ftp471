@@ -2,6 +2,11 @@
 *.swp
 *.swo
 
+# IntelliJ project files
+*.idea
+*.iml
+
+# Java object files
 .class
 
 # Package Files #
