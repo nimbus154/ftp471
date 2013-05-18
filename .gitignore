@@ -7,7 +7,8 @@
 *.iml
 
 # Java object files
-.class
+*.class
+*/target/**
 
 # Package Files #
 *.jar
