@@ -8,9 +8,11 @@ public class ControlClientImpl implements ControlClient {
     /**
      * Create a ControlClient
      * @param domainName domain name of server to which to connect
+     * @param port port on server to which to connect
      * @throws Exception if domain name isn't found
      */
-    public ControlClientImpl(String domainName) throws Exception {
+    public ControlClientImpl(String domainName, short port)
+            throws Exception {
 
     }
 
