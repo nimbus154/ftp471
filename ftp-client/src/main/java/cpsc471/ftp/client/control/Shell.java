@@ -87,7 +87,31 @@ public class Shell {
      */
     public boolean invokeCmd(String[] args) {
 
-        return false;
+        String cmd = args[0];
+
+        boolean continueExec = true;
+
+        switch(cmd) {
+
+            case "quit":
+                // close connection to server
+                client.quit();
+                // exit process
+                continueExec = false;
+                break;
+
+            default: // unknown command; print help
+                help();
+                break;
+        }
+        return continueExec;
+    }
+
+    /**
+     * Print a list of commands and options
+     */
+    public void help() {
+
     }
 
     // endregion
