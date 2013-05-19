@@ -12,6 +12,7 @@ import java.net.UnknownHostException;
 public class ControlClientImpl implements ControlClient {
 
     private String domainName;
+
     private short port;
 
     private Socket socket;
@@ -30,6 +31,11 @@ public class ControlClientImpl implements ControlClient {
 
         socket = new Socket(domainName, port);
     }
+
+    /**
+     * Basic constructor, for testing
+     */
+    public ControlClientImpl() { }
 
     @Override
     public void ls() {
@@ -50,6 +56,7 @@ public class ControlClientImpl implements ControlClient {
     @Override
     public void quit() {
         //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     // region Getters and Setters
@@ -60,6 +67,22 @@ public class ControlClientImpl implements ControlClient {
 
     public short getPort() {
         return port;
+    }
+
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
+    }
+
+    public void setPort(short port) {
+        this.port = port;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
     }
     // endregion
 }
