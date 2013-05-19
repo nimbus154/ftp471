@@ -4,6 +4,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.FileNotFoundException;
+
 import static org.mockito.Mockito.*;
 
 /**
@@ -94,15 +96,45 @@ public class ShellTest {
         verify(client, times(1)).ls();
     }
 
-//    /**
-//     * Put command with file not found
-//     */
-//    public void testPutFileNotFound() {
-//
-//        String[] args = {"put", "notAFile"};
-//        // Get command should stay in shell
-//        Assert.assertEquals(shell.invokeCmd(args), true,
-//                "Shell should run after PUT invoked");
-//        // put should not have been invoked at all
-//    }
+    /**
+     * Ensure put can be invoked from shell
+     */
+    public void testPut() throws Exception {
+
+        String[] args = {"put", "localFile"};
+        // Put command should stay in shell
+        Assert.assertEquals(shell.invokeCmd(args), true,
+                "Shell should run after PUT invoked");
+        // an interactive command should have invoked the help method
+        verify(client, times(1)).put(args[1]);
+    }
+
+    /**
+     * User passes too many arguments to put
+     */
+    public void testPutInvalidNumArgs() throws Exception {
+
+        String[] args = {"put", "localFile", "localFile2"};
+        // Put command should stay in shell
+        Assert.assertEquals(shell.invokeCmd(args), true,
+                "Shell should run after PUT invoked");
+        // an interactive command should have invoked the help method
+        verify(client, times(0)).put(anyString());
+    }
+
+    /**
+     * Put command with file not found
+     */
+    public void testPutFileNotFound() throws Exception {
+
+        String fileNotFound = "notFound";
+        // mock throws an exception on invocation; cli should handle it gracefully
+        doThrow(new FileNotFoundException()).when(client).put(fileNotFound);
+
+        String[] args = {"put", fileNotFound};
+        // Get command should stay in shell
+        Assert.assertEquals(shell.invokeCmd(args), true,
+                "Shell should run after PUT invoked");
+        // put should not have been invoked at all
+    }
 }

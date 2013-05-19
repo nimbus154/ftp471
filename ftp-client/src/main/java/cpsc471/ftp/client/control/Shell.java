@@ -102,11 +102,14 @@ public class Shell {
         boolean continueExec = true;
 
         switch(cmd) {
+            case "ls":
+                client.ls();
+                break;
             case "get":
                 handleGet(args);
                 break;
-            case "ls":
-                client.ls();
+            case "put":
+                handlePut(args);
                 break;
             case "quit":
                 // close connection to server
@@ -123,15 +126,37 @@ public class Shell {
 
     /**
      * Handles the "get" function
-     * @param args
+     * @param args arguments to pass to get
      */
     public void handleGet(String[] args) {
 
         if(args.length == 2) {
-                client.get(args[1]);
+            client.get(args[1]);
         }
         else {
             System.out.println(HELP_GET);
+        }
+    }
+
+    /**
+     * Handles the put function
+     * @param args arguments to pass to put
+     */
+    public void handlePut(String[] args) {
+
+        if(args.length == 2) {
+            try {
+                client.put(args[1]);
+            }
+            catch (FileNotFoundException e) {
+                System.err.println(
+                        "Unable to upload \"" + args[1] + "\"; " +
+                        "unable to find file."
+                );
+            }
+        }
+        else {
+            System.out.println(HELP_PUT);
         }
     }
 
