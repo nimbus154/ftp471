@@ -24,6 +24,8 @@ public class ControlClientTest {
      */
     public void testValidDomainName() throws Exception {
 
-        new ControlClientImpl("google.com", (short)12);
+        // these values are important. This test actually establishes
+        // a socket with Google. There must be a better way to do this.
+        new ControlClientImpl("google.com", (short)80);
     }
 }

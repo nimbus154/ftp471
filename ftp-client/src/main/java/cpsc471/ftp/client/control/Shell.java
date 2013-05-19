@@ -3,6 +3,7 @@ package cpsc471.ftp.client.control;
 import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
@@ -42,8 +43,11 @@ public class Shell {
                 System.err.println("<port> must be a 16-bit integer");
             }
             catch (UnknownHostException e) {
-
                 System.err.println("Unable to resolve host: " + domainName);
+            }
+            catch (IOException e) {
+                System.err.println("Error with IO: " + e
+                        + " " + e.getMessage());
             }
         }
     }
