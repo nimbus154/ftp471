@@ -1,21 +1,30 @@
 package cpsc471.ftp.client.control;
 
 import java.io.FileNotFoundException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Implementation of the ControlClient interface
  */
 public class ControlClientImpl implements ControlClient {
 
+    private String domainName;
+    private short port;
+    private InetAddress ip;
+
     /**
      * Create a ControlClient
-     * @param domainName domain name of server to which to connect
+     * @param domainName domainName name of server to which to connect
      * @param port port on server to which to connect
-     * @throws Exception if domain name isn't found
+     * @throws IllegalArgumentException if domainName name isn't found
      */
     public ControlClientImpl(String domainName, short port)
-            throws Exception {
+            throws UnknownHostException {
 
+        ip = InetAddress.getByName(domainName);
+        this.domainName = domainName;
+        this.port = port;
     }
 
     @Override
@@ -38,4 +47,19 @@ public class ControlClientImpl implements ControlClient {
     public void quit() {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    // region Getters and Setters
+
+    public String getDomainName() {
+        return domainName;
+    }
+
+    public short getPort() {
+        return port;
+    }
+
+    public InetAddress getIp() {
+        return ip;
+    }
+    // endregion
 }
