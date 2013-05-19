@@ -81,7 +81,18 @@ public class ShellTest {
         verify(client, times(0)).get(anyString());
     }
 
+    /**
+     * Invoke the ls command
+     */
+    public void testLs() {
 
+        String[] args = {"ls"};
+        // Get command should stay in shell
+        Assert.assertEquals(shell.invokeCmd(args), true,
+                "Shell should run after ls invoked");
+        // get should not have been invoked at all
+        verify(client, times(1)).ls();
+    }
 
 //    /**
 //     * Put command with file not found
@@ -94,7 +105,4 @@ public class ShellTest {
 //                "Shell should run after PUT invoked");
 //        // put should not have been invoked at all
 //    }
-
-
-
 }
