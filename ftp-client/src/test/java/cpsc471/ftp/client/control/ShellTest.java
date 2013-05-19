@@ -54,4 +54,47 @@ public class ShellTest {
         verify(shellSpy, times(1)).help();
     }
 
+
+    /**
+     * Get command
+     */
+    public void testGet() {
+
+        String[] args = {"get", "remoteFile"};
+        // Get command should stay in shell
+        Assert.assertEquals(shell.invokeCmd(args), true,
+                "Shell should run after GET invoked");
+        // an interactive command should have invoked the help method
+        verify(client, times(1)).get(args[1]);
+    }
+
+    /**
+     * Get command invalid number of args
+     */
+    public void testGetInvalidNumArgs() {
+
+        String[] args = {"get", "remoteFile", "remoteFile2"};
+        // Get command should stay in shell
+        Assert.assertEquals(shell.invokeCmd(args), true,
+                "Shell should run after GET invoked");
+        // get should not have been invoked at all
+        verify(client, times(0)).get(anyString());
+    }
+
+
+
+//    /**
+//     * Put command with file not found
+//     */
+//    public void testPutFileNotFound() {
+//
+//        String[] args = {"put", "notAFile"};
+//        // Get command should stay in shell
+//        Assert.assertEquals(shell.invokeCmd(args), true,
+//                "Shell should run after PUT invoked");
+//        // put should not have been invoked at all
+//    }
+
+
+
 }

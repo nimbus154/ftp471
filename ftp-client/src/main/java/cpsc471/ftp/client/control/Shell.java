@@ -2,6 +2,7 @@ package cpsc471.ftp.client.control;
 
 import org.apache.log4j.Logger;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -53,6 +54,15 @@ public class Shell {
 
     private ControlClient client;
 
+    private static final String HELP_GET =  "get    : get <remote file>\n" +
+                                            "           download a file\n";
+    private static final String HELP_LS =   "ls     : ls\n" +
+                                            "           list files on remote system\n";
+    private static final String HELP_PUT =  "put    : put <local file>\n" +
+                                            "           upload a file\n";
+    private static final String HELP_QUIT = "quit   : quit\n" +
+                                            "           exits the program\n";
+
     /**
      * Create an interactive ftp shell
      * @param client a client with an open connection to a server
@@ -92,19 +102,37 @@ public class Shell {
         boolean continueExec = true;
 
         switch(cmd) {
-
+            case "get":
+                handleGet(args);
+                break;
+            case "ls":
+                client.ls();
+                break;
             case "quit":
                 // close connection to server
                 client.quit();
                 // exit process
                 continueExec = false;
                 break;
-
             default: // unknown command; print help
                 help();
                 break;
         }
         return continueExec;
+    }
+
+    /**
+     * Handles the "get" function
+     * @param args
+     */
+    public void handleGet(String[] args) {
+
+        if(args.length == 2) {
+                client.get(args[1]);
+        }
+        else {
+            System.out.println(HELP_GET);
+        }
     }
 
     /**
@@ -114,14 +142,10 @@ public class Shell {
 
         System.out.printf(
                 "Available commands:\n" +
-                        "get    : get <remote file>\n" +
-                        "           download a file\n" +
-                        "ls     : ls\n" +
-                        "           list files on remote system\n" +
-                        "put    : put <local file>\n" +
-                        "           upload a file\n" +
-                        "quit   : quit\n" +
-                        "           exits the program\n"
+                        HELP_GET +
+                        HELP_LS +
+                        HELP_PUT +
+                        HELP_QUIT
         );
     }
 
