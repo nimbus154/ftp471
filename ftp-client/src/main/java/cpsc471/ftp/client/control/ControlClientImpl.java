@@ -1,5 +1,7 @@
 package cpsc471.ftp.client.control;
 
+import java.io.FileNotFoundException;
+
 /**
  * Implementation of the ControlClient interface
  */
@@ -22,7 +24,8 @@ public class ControlClientImpl implements ControlClient {
     }
 
     @Override
-    public void put(String localFile) {
+    public void put(String localFile)
+        throws FileNotFoundException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

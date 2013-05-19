@@ -1,5 +1,7 @@
 package cpsc471.ftp.client.control;
 
+import java.io.FileNotFoundException;
+
 /**
  * Client for the control channel
  */
@@ -13,8 +15,9 @@ public interface ControlClient {
     /**
      * Upload a file to the server
      * @param localFile file to upload
+     * @throws FileNotFoundException if localFile does not refer to a valid file
      */
-    public void put(String localFile);
+    public void put(String localFile) throws FileNotFoundException;
 
     /**
      * Retrieve a file from the server
