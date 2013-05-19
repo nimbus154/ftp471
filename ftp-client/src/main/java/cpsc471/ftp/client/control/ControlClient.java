@@ -12,13 +12,15 @@ public interface ControlClient {
 
     /**
      * Upload a file to the server
+     * @param localFile file to upload
      */
-    public void put();
+    public void put(String localFile);
 
     /**
      * Retrieve a file from the server
+     * @param remoteFile file to retrieve
      */
-    public void get();
+    public void get(String remoteFile);
 
     /**
      * Terminate connection with server

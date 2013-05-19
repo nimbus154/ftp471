@@ -22,12 +22,12 @@ public class ControlClientImpl implements ControlClient {
     }
 
     @Override
-    public void put() {
+    public void put(String localFile) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public void get() {
+    public void get(String remoteFile) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
