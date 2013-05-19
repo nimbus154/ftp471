@@ -3,6 +3,7 @@ package cpsc471.ftp.client.control;
 import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 /**
@@ -28,8 +29,8 @@ public class Shell {
             usage();
         }
         else {
+            String domainName = args[0];
             try {
-                String domainName = args[0];
                 short port = Short.parseShort(args[1]);
                 ControlClient client = new ControlClientImpl(domainName, port);
 
@@ -40,10 +41,9 @@ public class Shell {
                 // thrown if port isn't a number or a short
                 System.err.println("<port> must be a 16-bit integer");
             }
-            catch (Exception e) {
-                System.err.println("An unexpected error occurred: "
-                        + e.getMessage());
-                logger.error(e.getClass().getName() + " " + e.getMessage());
+            catch (UnknownHostException e) {
+
+                System.err.println("Unable to resolve host: " + domainName);
             }
         }
     }
