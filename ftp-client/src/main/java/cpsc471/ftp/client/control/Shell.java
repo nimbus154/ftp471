@@ -112,6 +112,17 @@ public class Shell {
      */
     public void help() {
 
+        System.out.printf(
+                "Available commands:\n" +
+                        "get    : get <remote file>\n" +
+                        "           download a file\n" +
+                        "ls     : ls\n" +
+                        "           list files on remote system\n" +
+                        "put    : put <local file>\n" +
+                        "           upload a file\n" +
+                        "quit   : quit\n" +
+                        "           exits the program\n"
+        );
     }
 
     // endregion

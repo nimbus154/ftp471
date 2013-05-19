@@ -40,7 +40,7 @@ public class ShellTest {
     /**
      * Enter an invalid command
      */
-    public void testBasCommand() {
+    public void testBadCommand() {
 
         String[] args = {"test"};
         Shell shellSpy = spy(shell);
