@@ -1,5 +1,6 @@
 package cpsc471.ftp.client.control;
 
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -21,6 +22,7 @@ public class ControlClientTest {
     private Socket socket;
 
     private ByteArrayOutputStream outputStream;
+    private ByteArrayInputStream inputStream;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -32,6 +34,12 @@ public class ControlClientTest {
         // this allows for complete control over the internal socket and state
         outputStream = new ByteArrayOutputStream();
         when(socket.getOutputStream()).thenReturn(outputStream);
+
+        inputStream = new ByteArrayInputStream("".getBytes());
+        when(socket.getInputStream()).thenReturn(inputStream);
+
+        client = new ControlClientImpl();
+        client.setSocket(socket);
     }
 
     /**
@@ -59,8 +67,9 @@ public class ControlClientTest {
      */
     public void testLs() throws Exception {
 
-        client.setSocket(socket);
-
         client.ls();
+        // ls should be written to wire
+        Assert.assertEquals(outputStream.toByteArray(), "ls\n".getBytes(),
+                "\"ls\" wasn't written to socket");
     }
 }

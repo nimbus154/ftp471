@@ -42,8 +42,10 @@ public class ControlClientImpl implements ControlClient {
     @Override
     public void ls() {
 
-        //socketWriter.println("ls");
-        // socketWriter.write("ls\n".getBytes());
+        socketWriter.println("ls");
+        socketWriter.flush();
+
+        // todo add data transfer
     }
 
     @Override
@@ -71,14 +73,6 @@ public class ControlClientImpl implements ControlClient {
 
     public short getPort() {
         return port;
-    }
-
-    public void setDomainName(String domainName) {
-        this.domainName = domainName;
-    }
-
-    public void setPort(short port) {
-        this.port = port;
     }
 
     public Socket getSocket() {
