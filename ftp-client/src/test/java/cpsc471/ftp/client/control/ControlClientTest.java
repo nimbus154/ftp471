@@ -3,10 +3,13 @@ package cpsc471.ftp.client.control;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Test for the control client
@@ -14,7 +17,7 @@ import static org.mockito.Mockito.mock;
 @Test
 public class ControlClientTest {
 
-    private ControlClient client;
+    private ControlClientImpl client;
     private Socket socket;
 
     @BeforeMethod
@@ -22,6 +25,7 @@ public class ControlClientTest {
 
         client = new ControlClientImpl();
         socket = mock(Socket.class);
+        client.setSocket(socket);
     }
 
     /**
@@ -43,4 +47,15 @@ public class ControlClientTest {
         // a socket with Google. There must be a better way to do this.
         // new ControlClientImpl("google.com", (short)80);
     }
+//
+//    /**
+//     * Execute the ls command
+//     */
+//    public void testLs() {
+//
+//        PrintWriter socketWriter = mock(PrintWriter.class);
+//        client.setSocketWriter(socketWriter);
+//
+//        client.ls();
+//    }
 }
