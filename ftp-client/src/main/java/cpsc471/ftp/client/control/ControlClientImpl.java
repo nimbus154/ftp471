@@ -1,5 +1,8 @@
 package cpsc471.ftp.client.control;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -8,6 +11,8 @@ import java.net.UnknownHostException;
  * Implementation of the ControlClient interface
  */
 public class ControlClientImpl implements ControlClient {
+
+    private Logger logger = Logger.getLogger(this.getClass());
 
     private String domainName;
 
@@ -37,7 +42,10 @@ public class ControlClientImpl implements ControlClient {
     /**
      * Basic constructor, for testing
      */
-    public ControlClientImpl() { }
+    public ControlClientImpl() {
+
+        BasicConfigurator.configure(); // configure log4j
+    }
 
     @Override
     public void ls() {
@@ -61,8 +69,13 @@ public class ControlClientImpl implements ControlClient {
 
     @Override
     public void quit() {
-        //To change body of implemented methods use File | Settings | File Templates.
 
+        try {
+            socket.close();
+        }
+        catch (IOException e) {
+            logger.warn("Unable to close socket:" + e.getMessage(), e);
+        }
     }
 
     // region Getters and Setters

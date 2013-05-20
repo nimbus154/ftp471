@@ -72,4 +72,15 @@ public class ControlClientTest {
         Assert.assertEquals(outputStream.toByteArray(), "ls\n".getBytes(),
                 "\"ls\" wasn't written to socket");
     }
+
+    /**
+     * Invoke quit
+     */
+    public void testQuit() throws Exception {
+
+        // should close socket
+        client.quit();
+
+        verify(socket, times(1)).close();
+    }
 }

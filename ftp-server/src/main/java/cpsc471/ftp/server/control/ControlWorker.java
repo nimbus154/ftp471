@@ -82,10 +82,6 @@ public class ControlWorker implements Runnable {
 
     }
 
-    public void quit() {
-
-    }
-
     // region Setters and Getters
 
     public Socket getSocket() {
