@@ -12,7 +12,7 @@ public class ControlWorker implements Runnable {
     private Logger logger = Logger.getLogger(ControlWorker.class);
 
     /**
-     * Create a worker to handle a connect
+     * Create a worker to handle a connection
      * @param socket a socket representing the connection for this
      *               worker to handle
      */
