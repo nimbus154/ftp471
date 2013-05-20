@@ -3,13 +3,13 @@ package cpsc471.ftp.client.control;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.PrintWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 /**
  * Test for the control client
@@ -20,12 +20,24 @@ public class ControlClientTest {
     private ControlClientImpl client;
     private Socket socket;
 
-    @BeforeMethod
-    public void setUp() {
+    private ByteArrayOutputStream outputStream;
+    private ByteArrayInputStream inputStream;
 
-        client = new ControlClientImpl();
+    @BeforeMethod
+    public void setUp() throws Exception {
+
+        // mock the socket
         socket = mock(Socket.class);
-        client.setSocket(socket);
+
+        // when socket method calls, return test objects
+        // this allows for complete control over the internal socket and state
+        outputStream = new ByteArrayOutputStream();
+
+        byte[] input = "connecting".getBytes();
+        inputStream = new ByteArrayInputStream(input);
+
+        when(socket.getOutputStream()).thenReturn(outputStream);
+        when(socket.getInputStream()).thenReturn(inputStream);
     }
 
     /**

@@ -15,7 +15,7 @@ public class ControlClientImpl implements ControlClient {
 
     private Socket socket;
 
-    private PrintWriter socketWriter;
+    private OutputStream socketWriter;
 
     private BufferedReader socketReader;
 
@@ -31,12 +31,7 @@ public class ControlClientImpl implements ControlClient {
         this.domainName = domainName;
         this.port = port;
 
-        socket = new Socket(domainName, port);
-
-        socketWriter = new PrintWriter(socket.getOutputStream());
-        socketReader = new BufferedReader(
-                new InputStreamReader(socket.getInputStream())
-        );
+        setSocket(new Socket(domainName, port));
     }
 
     /**
@@ -89,25 +84,16 @@ public class ControlClientImpl implements ControlClient {
         return socket;
     }
 
-    public void setSocket(Socket socket) {
+    /**
+     * Sets socket and streams that read from socket
+     * @param socket socket to set
+     * @throws IOException if unable to open a stream into the socket
+     */
+    public void setSocket(Socket socket) throws IOException {
+
         this.socket = socket;
-    }
-
-
-    public PrintWriter getSocketWriter() {
-        return socketWriter;
-    }
-
-    public void setSocketWriter(PrintWriter socketWriter) {
-        this.socketWriter = socketWriter;
-    }
-
-    public BufferedReader getSocketReader() {
-        return socketReader;
-    }
-
-    public void setSocketReader(BufferedReader socketReader) {
-        this.socketReader = socketReader;
+        socketWriter = socket.getOutputStream();
+        socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
     // endregion
 }

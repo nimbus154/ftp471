@@ -13,7 +13,7 @@ public class ControlWorker implements Runnable {
 
     private Logger logger = Logger.getLogger(ControlWorker.class);
 
-    private OutputStream outputStream;
+    private OutputStream socketWriter;
 
     private BufferedReader socketReader;
 
@@ -28,11 +28,7 @@ public class ControlWorker implements Runnable {
      */
     public ControlWorker(Socket socket) throws IOException {
 
-        this.socket = socket;
-        outputStream = socket.getOutputStream();
-        socketReader = new BufferedReader(
-                new InputStreamReader(socket.getInputStream())
-        );
+        setSocket(socket);
     }
 
     /**
@@ -42,8 +38,6 @@ public class ControlWorker implements Runnable {
 
         BasicConfigurator.configure(); // configure log4j
     }
-
-
 
     @Override
     public void run() {
@@ -94,29 +88,22 @@ public class ControlWorker implements Runnable {
 
     // region Setters and Getters
 
-    public OutputStream getOutputStream() {
-        return outputStream;
-    }
-
-    public void setOutputStream(OutputStream outputStream) {
-        this.outputStream = outputStream;
-    }
-
-    public BufferedReader getSocketReader() {
-        return socketReader;
-    }
-
-    public void setSocketReader(BufferedReader socketReader) {
-        this.socketReader = socketReader;
-    }
-
-
     public Socket getSocket() {
         return socket;
     }
 
-    public void setSocket(Socket socket) {
+    /**
+     * Sets socket and streams that read from socket
+     * @param socket socket to set
+     * @throws IOException if unable to open a stream into the socket
+     */
+    public void setSocket(Socket socket) throws IOException {
+
         this.socket = socket;
+        socketWriter = socket.getOutputStream();
+        socketReader = new BufferedReader(
+                new InputStreamReader(socket.getInputStream())
+        );
     }
 
     // endregion

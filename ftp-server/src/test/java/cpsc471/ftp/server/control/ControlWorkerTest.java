@@ -39,10 +39,6 @@ public class ControlWorkerTest {
         // this allows for complete control over the internal socket and state
         outputStream = new ByteArrayOutputStream();
         when(socket.getOutputStream()).thenReturn(outputStream);
-        when(socket.getInputStream()).thenReturn(inputStream);
-
-        worker.setSocket(socket);
-        worker.setOutputStream(outputStream);
     }
 
     /**
@@ -53,7 +49,8 @@ public class ControlWorkerTest {
         // populate a fake socket buffer with the ls command
         String command = "ls\n";
         inputStream = new ByteArrayInputStream(command.getBytes());
-        worker.setSocketReader(new BufferedReader(new InputStreamReader(inputStream)));
+        when(socket.getInputStream()).thenReturn(inputStream);
+        worker.setSocket(socket);
 
         // create a worker spy so we can confirm which methods were invoked
         ControlWorker workerSpy = spy(worker);
