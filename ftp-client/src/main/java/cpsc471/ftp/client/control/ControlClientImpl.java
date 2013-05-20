@@ -15,7 +15,7 @@ public class ControlClientImpl implements ControlClient {
 
     private Socket socket;
 
-    private OutputStream socketWriter;
+    private PrintWriter socketWriter;
 
     private BufferedReader socketReader;
 
@@ -43,6 +43,7 @@ public class ControlClientImpl implements ControlClient {
     public void ls() {
 
         //socketWriter.println("ls");
+        // socketWriter.write("ls\n".getBytes());
     }
 
     @Override
@@ -92,7 +93,7 @@ public class ControlClientImpl implements ControlClient {
     public void setSocket(Socket socket) throws IOException {
 
         this.socket = socket;
-        socketWriter = socket.getOutputStream();
+        socketWriter = new PrintWriter(socket.getOutputStream());
         socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
     // endregion

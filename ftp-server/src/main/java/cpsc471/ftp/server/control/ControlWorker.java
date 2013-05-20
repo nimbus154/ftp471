@@ -13,7 +13,7 @@ public class ControlWorker implements Runnable {
 
     private Logger logger = Logger.getLogger(ControlWorker.class);
 
-    private OutputStream socketWriter;
+    private PrintWriter socketWriter;
 
     private BufferedReader socketReader;
 
@@ -63,13 +63,13 @@ public class ControlWorker implements Runnable {
     /**
      * Handle the ls command
      */
-    public void ls() throws IOException {
+    public void ls() {
 
         logger.info("Handling \"ls\" command");
 
         // respond to request with "connecting"
-        socket.getOutputStream().write(CONNECTING_MESSAGE.getBytes());
-
+        socketWriter.println(CONNECTING_MESSAGE);
+        socketWriter.flush();
         // open a new data connection with which to send data
         // todo open data connection
     }
@@ -100,7 +100,7 @@ public class ControlWorker implements Runnable {
     public void setSocket(Socket socket) throws IOException {
 
         this.socket = socket;
-        socketWriter = socket.getOutputStream();
+        socketWriter = new PrintWriter(socket.getOutputStream());
         socketReader = new BufferedReader(
                 new InputStreamReader(socket.getInputStream())
         );

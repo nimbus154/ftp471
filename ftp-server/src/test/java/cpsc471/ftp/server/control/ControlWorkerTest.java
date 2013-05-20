@@ -60,7 +60,7 @@ public class ControlWorkerTest {
 
         verify(workerSpy, times(1)).ls();
 
-        Assert.assertEquals(outputStream.toByteArray(), "connecting".getBytes(),
+        Assert.assertEquals(outputStream.toByteArray(), "connecting\n".getBytes(),
                 "\"connecting\" was not written to output socket");
     }
 }

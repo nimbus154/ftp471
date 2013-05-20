@@ -21,7 +21,6 @@ public class ControlClientTest {
     private Socket socket;
 
     private ByteArrayOutputStream outputStream;
-    private ByteArrayInputStream inputStream;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -32,12 +31,7 @@ public class ControlClientTest {
         // when socket method calls, return test objects
         // this allows for complete control over the internal socket and state
         outputStream = new ByteArrayOutputStream();
-
-        byte[] input = "connecting".getBytes();
-        inputStream = new ByteArrayInputStream(input);
-
         when(socket.getOutputStream()).thenReturn(outputStream);
-        when(socket.getInputStream()).thenReturn(inputStream);
     }
 
     /**
@@ -59,15 +53,14 @@ public class ControlClientTest {
         // a socket with Google. There must be a better way to do this.
         // new ControlClientImpl("google.com", (short)80);
     }
-//
-//    /**
-//     * Execute the ls command
-//     */
-//    public void testLs() {
-//
-//        PrintWriter socketWriter = mock(PrintWriter.class);
-//        client.setSocketWriter(socketWriter);
-//
-//        client.ls();
-//    }
+
+    /**
+     * Execute the ls command
+     */
+    public void testLs() throws Exception {
+
+        client.setSocket(socket);
+
+        client.ls();
+    }
 }
