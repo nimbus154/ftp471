@@ -47,10 +47,7 @@ public class ControlWorkerTest {
     public void testLs() throws Exception {
 
         // populate a fake socket buffer with the ls command
-        String command = "ls\n";
-        inputStream = new ByteArrayInputStream(command.getBytes());
-        when(socket.getInputStream()).thenReturn(inputStream);
-        worker.setSocket(socket);
+        fakeCommand("ls\n");
 
         // create a worker spy so we can confirm which methods were invoked
         ControlWorker workerSpy = spy(worker);
@@ -62,5 +59,26 @@ public class ControlWorkerTest {
 
         Assert.assertEquals(outputStream.toByteArray(), "connecting\n".getBytes(),
                 "\"connecting\" was not written to output socket");
+    }
+
+    /**
+     * Test basic put
+     */
+    public void testPut() {
+
+
+    }
+
+    /**
+     * Populate the mock socket with a command, as if sent from client
+     * @param commandsSent
+     */
+    private void fakeCommand(String commandsSent) throws Exception {
+
+        // populate a fake socket buffer with the ls command
+        String command = commandsSent;
+        inputStream = new ByteArrayInputStream(command.getBytes());
+        when(socket.getInputStream()).thenReturn(inputStream);
+        worker.setSocket(socket);
     }
 }
