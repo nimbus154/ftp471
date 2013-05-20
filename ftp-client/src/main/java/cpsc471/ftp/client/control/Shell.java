@@ -171,10 +171,10 @@ public class Shell {
 
         System.out.printf(
                 "Available commands:\n" +
-                        HELP_GET +
-                        HELP_LS +
-                        HELP_PUT +
-                        HELP_QUIT
+                        "\t" + HELP_GET +
+                        "\t" + HELP_LS +
+                        "\t" + HELP_PUT +
+                        "\t" + HELP_QUIT
         );
     }
 
