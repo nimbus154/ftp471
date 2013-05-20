@@ -3,10 +3,7 @@ package cpsc471.ftp.server.control;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -16,11 +13,13 @@ public class ControlWorker implements Runnable {
 
     private Logger logger = Logger.getLogger(ControlWorker.class);
 
-    private PrintWriter socketWriter;
+    private OutputStream outputStream;
 
     private BufferedReader socketReader;
 
     private Socket socket;
+
+    private static final String CONNECTING_MESSAGE = "connecting";
 
     /**
      * Create a worker to handle a connection
@@ -30,7 +29,7 @@ public class ControlWorker implements Runnable {
     public ControlWorker(Socket socket) throws IOException {
 
         this.socket = socket;
-        socketWriter = new PrintWriter(socket.getOutputStream());
+        outputStream = socket.getOutputStream();
         socketReader = new BufferedReader(
                 new InputStreamReader(socket.getInputStream())
         );
@@ -48,16 +47,37 @@ public class ControlWorker implements Runnable {
 
     @Override
     public void run() {
-        //To change body of implemented methods use File | Settings | File Templates.
         logger.info("Servicing connection");
-        ls();
+
+        try {
+            String cmd = socketReader.readLine();
+            logger.info("Read " + cmd);
+
+            switch(cmd) {
+                case "ls":
+                    ls();
+                    break;
+                default:
+                    break;
+            }
+        }
+        catch (IOException e) {
+            logger.warn("Nothing in input buffer");
+        }
     }
 
     /**
      * Handle the ls command
      */
-    public void ls() {
+    public void ls() throws IOException {
 
+        logger.info("Handling \"ls\" command");
+
+        // respond to request with "connecting"
+        socket.getOutputStream().write(CONNECTING_MESSAGE.getBytes());
+
+        // open a new data connection with which to send data
+        // todo open data connection
     }
 
     public void get(String file, short port) {
@@ -74,12 +94,12 @@ public class ControlWorker implements Runnable {
 
     // region Setters and Getters
 
-    public PrintWriter getSocketWriter() {
-        return socketWriter;
+    public OutputStream getOutputStream() {
+        return outputStream;
     }
 
-    public void setSocketWriter(PrintWriter socketWriter) {
-        this.socketWriter = socketWriter;
+    public void setOutputStream(OutputStream outputStream) {
+        this.outputStream = outputStream;
     }
 
     public BufferedReader getSocketReader() {

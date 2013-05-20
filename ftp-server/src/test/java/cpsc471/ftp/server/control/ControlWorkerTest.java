@@ -42,13 +42,13 @@ public class ControlWorkerTest {
         when(socket.getInputStream()).thenReturn(inputStream);
 
         worker.setSocket(socket);
-        worker.setSocketWriter(new PrintWriter(outputStream));
+        worker.setOutputStream(outputStream);
     }
 
     /**
      * Client sends "ls" command to server
      */
-    public void testLs() {
+    public void testLs() throws Exception {
 
         // populate a fake socket buffer with the ls command
         String command = "ls\n";
@@ -62,6 +62,7 @@ public class ControlWorkerTest {
         workerSpy.run();
 
         verify(workerSpy, times(1)).ls();
+
         Assert.assertEquals(outputStream.toByteArray(), "connecting".getBytes(),
                 "\"connecting\" was not written to output socket");
     }
