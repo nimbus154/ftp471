@@ -45,6 +45,12 @@ public class ControlWorker implements Runnable {
     public void run() {
         logger.info("Servicing connection");
 
+        while(socket.isConnected()) {
+            handleCmd();
+        }
+    }
+
+    public void handleCmd() {
         try {
             String cmd = socketReader.readLine();
             logger.info("Read " + cmd);

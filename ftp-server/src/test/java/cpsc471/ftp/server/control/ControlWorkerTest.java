@@ -61,7 +61,7 @@ public class ControlWorkerTest {
         ControlWorker workerSpy = spy(worker);
 
         // the method to test
-        workerSpy.run();
+        workerSpy.handleCmd();
 
         verify(workerSpy, times(1)).ls();
 
@@ -83,7 +83,7 @@ public class ControlWorkerTest {
         ControlWorker workerSpy = spy(worker);
 
         // the method to test
-        workerSpy.run();
+        workerSpy.handleCmd();
 
         verify(workerSpy, times(1)).put();
 
