@@ -98,8 +98,8 @@ public class ControlWorker implements Runnable {
             notFound();
             return;
         }
-        logger.info("handling \"get\"");
 
+        logger.info("handling \"get\"");
         // respond to request with "connecting"
         connect();
     }
