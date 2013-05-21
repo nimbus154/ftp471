@@ -58,13 +58,13 @@ public class Shell {
 
     private ControlClient client;
 
-    private static final String HELP_GET =  "get    : get <remote file>\n" +
+    private static final String HELP_GET =  "get    get <remote file>\n" +
                                             "           download a file\n";
-    private static final String HELP_LS =   "ls     : ls\n" +
+    private static final String HELP_LS =   "ls     ls\n" +
                                             "           list files on remote system\n";
-    private static final String HELP_PUT =  "put    : put <local file>\n" +
+    private static final String HELP_PUT =  "put    put <local file>\n" +
                                             "           upload a file\n";
-    private static final String HELP_QUIT = "quit   : quit\n" +
+    private static final String HELP_QUIT = "quit    quit\n" +
                                             "           exits the program\n";
 
     /**
