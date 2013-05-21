@@ -76,8 +76,7 @@ public class ControlWorker implements Runnable {
         logger.info("handling \"ls\"");
 
         // respond to request with "connecting"
-        socketWriter.println(CONNECTING_MESSAGE);
-        socketWriter.flush();
+        connect();
 
         // open a new data connection with which to send data
         // todo open data connection
@@ -88,36 +87,21 @@ public class ControlWorker implements Runnable {
      */
     public void get() {
 
-        String fileName;
-        try {
-            fileName = socketReader.readLine();
-            if(fileName == null || fileName.length() == 0) {
-                throw new IOException("fileName blank");
-            }
-
-            File f = new File(fileName);
-            if(!f.exists()) {
-                throw new FileNotFoundException();
-            }
-        }
-        catch (FileNotFoundException e) {
-            logger.warn("Requested file not found");
-            socketWriter.println(FILE_NOT_FOUND_MESSAGE);
-            socketWriter.flush();
-            return;
-        }
-        catch (IOException e) {
+        String fileName = nextArg();
+        if(fileName == null) {
             logger.warn("Insufficient arguments supplied to get command");
-            socketWriter.println(INSUFFICIENT_ARGS_MESSAGE);
-            socketWriter.flush();
+            insufficientArgs();
             return;
         }
-
+        else if(!isValidFile(fileName)) {
+            logger.warn("Requested file not found");
+            notFound();
+            return;
+        }
         logger.info("handling \"get\"");
 
         // respond to request with "connecting"
-        socketWriter.println(CONNECTING_MESSAGE);
-        socketWriter.flush();
+        connect();
     }
 
     /**
@@ -125,7 +109,27 @@ public class ControlWorker implements Runnable {
      */
     public void put() {
 
+        String fileName = nextArg();
+        if(fileName == null) {
+            logger.warn("Insufficient arguments supplied to put command");
+            insufficientArgs();
+            return;
+        }
+
+        // fileName will always be the second line
+        logger.info("handling \"put " + fileName + "\"");
+        connect();
+    }
+
+    /**
+     * Extract fileName from stream
+     * @return string representing the next argument passed to the server
+     * null if none
+     */
+    private String nextArg() {
+
         String fileName;
+
         try {
             fileName = socketReader.readLine();
 
@@ -134,16 +138,45 @@ public class ControlWorker implements Runnable {
             }
         }
         catch (IOException e) {
-            logger.warn("Insufficient arguments supplied to put command");
-            socketWriter.println(INSUFFICIENT_ARGS_MESSAGE);
-            socketWriter.flush();
-            return;
+            return null;
         }
+        return fileName;
+    }
 
-        // fileName will always be the second line
-        logger.info("handling \"put " + fileName + "\"");
+    /**
+     * Checks if a file exists
+     * @param fileName name of file
+     * @return true if file exists
+     */
+    private boolean isValidFile(String fileName) {
+
+        return new File(fileName).exists();
+    }
+
+    /**
+     * Send a "connecting" response to client
+     */
+    private void connect() {
 
         socketWriter.println(CONNECTING_MESSAGE);
+        socketWriter.flush();
+    }
+
+    /**
+     * Send a "not found" message to client
+     */
+    private void notFound() {
+
+        socketWriter.println(FILE_NOT_FOUND_MESSAGE);
+        socketWriter.flush();
+    }
+
+    /**
+     * Send an insufficient args response to client
+     */
+    private void insufficientArgs() {
+
+        socketWriter.println(INSUFFICIENT_ARGS_MESSAGE);
         socketWriter.flush();
     }
 
