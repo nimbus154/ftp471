@@ -24,121 +24,104 @@ section for details.
 #### Control Channel Message Format
 
 ##### Request
-4 byte message type
-4 byte size, transferred in ASCII (thus, largest argument size is 9999 bytes)
-0-9999 bytes of data
+```
+command\n
+arguments\n
+```
 
 Each message type has predetermined format for the data portion of the message.
 
 ##### Response
-A ten-byte string describing the action the server will take in response to the
-request.
+A short response explaining the action taken by the server, ending in \n.
 
 ##### `quit` Message
 `quit` is the simplest message. It consists of only a the message type. No data
 is transferred with it.
-Message type: quit
-Size: [this field is ignored]
-Data: [this field is ignored]
 
 ###### Client Request
 ```
-quit
+quit\n
 ```
 
 ###### Server Response
-```
-closed
-```
+none
 
 ##### `get` Message
-Message type: get
-Size: size in bytes of arguments that follow
-Data: [name of file to retrieve] [ephermal port to use for file transfer, in
-ASCII]
-
-Data fields are delimited by spaces.
+`get` requests to retrieve a file from the server.
 
 The server responds by attempting to connect to the client on the ephemeral
 port.
 
 ###### Client Request
 ```
-get secret_knowledge.txt 1234
+get\n
+secret_knowledge.txt\n
+1234\n
 ```
 
 ###### Server Response
 ```
-connecting
+connecting\n
+```
+
+If insufficient arugments:
+```
+insufficient arguments\n
+```
+
+If file not found:
+```
+not found\n
 ```
 
 If no file with that name exists, the server reponds with a `not found` message.
 
 ##### `put` Message
-Message type: put
-Size: size in bytes of arguments that follow
-Data: [name of file to upload] [ephermal port to use for file transfer, in ASCII]
-
-Data fields are delimited by spaces.
+`put` uploads a file to the server.  If a file with that name already exists on
+the server, the file will be overwritten.
 
 The server responds by attempting to connect to the client on the ephemeral
 port.
 
 ###### Client Request
 ```
-put secret_knowledge.txt 1234
+put\n
+secret_knowledge.txt\n
+1234\n
 ```
 
 ###### Server Response
 ```
-connecting
+connecting\n
 ```
 
-If a file with that name already exists on the server, the file will be
-overwritten.
+If insufficient arugments:
+```
+insufficient arguments\n
+```
+
+If file not found:
+```
+not found\n
+```
 
 ##### `ls` Message
-Message type: ls
-Size: size in bytes of arguments that follow
-Data: [ephermal port to use for file transfer, in ASCII]
-
-Data fields are delimited by spaces.
-
-The server responds by attempting to connect to the client on the ephemeral
-port.
+`ls` lists all files in the server-side directory.
 
 ###### Client Request
 ```
-put secret_knowledge.txt 1234
+ls
 ```
 
 ###### Server Response
 ```
-connecting
+file1\n
+file2\n
+file3\n
 ```
 
-If a file with that name already exists on the server, the file will be
-overwritten.
-
-##### `ls` Message
-Message type: ls
-Size: [ignored by server]
-Data: [e
-
-The server responds by attempting to connect to the client on the ephemeral
-port.
-
-###### Client Request
-```
-put secret_knowledge.txt 1234
-```
-
-###### Server Response
-```
-connecting
-```
 ### Data Channel
-The data channel is where fiels are actually transferred. At this time, I'm not
+The data channel is where files are actually transferred. At this time, I'm not
 exactly sure how this will work. Since it uses sendfile, I don't think this will
 be as involved.
 
