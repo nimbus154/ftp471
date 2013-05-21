@@ -19,7 +19,9 @@ public class ControlWorker implements Runnable {
 
     private Socket socket;
 
-    private static final String CONNECTING_MESSAGE = "connecting";
+    public static final String CONNECTING_MESSAGE = "connecting";
+    public static final String INSUFFICIENT_ARGS_MESSAGE = "insufficient arguments";
+    public static final String FILE_NOT_FOUND_MESSAGE = "not found";
 
     /**
      * Create a worker to handle a connection
@@ -54,6 +56,9 @@ public class ControlWorker implements Runnable {
                 case "put":
                     put();
                     break;
+                case "get":
+                    get();
+                    break;
                 default:
                     break;
             }
@@ -78,8 +83,41 @@ public class ControlWorker implements Runnable {
         // todo open data connection
     }
 
-    public void get(String file, short port) {
+    /**
+     * Handle a request to download a file
+     */
+    public void get() {
 
+        String fileName;
+        try {
+            fileName = socketReader.readLine();
+            if(fileName == null || fileName.length() == 0) {
+                throw new IOException("fileName blank");
+            }
+
+            File f = new File(fileName);
+            if(!f.exists()) {
+                throw new FileNotFoundException();
+            }
+        }
+        catch (FileNotFoundException e) {
+            logger.warn("Requested file not found");
+            socketWriter.println(FILE_NOT_FOUND_MESSAGE);
+            socketWriter.flush();
+            return;
+        }
+        catch (IOException e) {
+            logger.warn("Insufficient arguments supplied to get command");
+            socketWriter.println(INSUFFICIENT_ARGS_MESSAGE);
+            socketWriter.flush();
+            return;
+        }
+
+        logger.info("handling \"get\"");
+
+        // respond to request with "connecting"
+        socketWriter.println(CONNECTING_MESSAGE);
+        socketWriter.flush();
     }
 
     /**

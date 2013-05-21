@@ -59,7 +59,7 @@ public class ControlWorkerTest {
 
         Assert.assertEquals(
                 outputStream.toByteArray(),
-                ControlWorker.CONNECTING_MESSAGE.getBytes(),
+                (ControlWorker.CONNECTING_MESSAGE + "\n").getBytes(),
                 "\"connecting\" was not written to output socket"
         );
     }
@@ -81,7 +81,7 @@ public class ControlWorkerTest {
 
         Assert.assertEquals(
                 outputStream.toByteArray(),
-                ControlWorker.CONNECTING_MESSAGE.getBytes(),
+                (ControlWorker.CONNECTING_MESSAGE + "\n").getBytes(),
                 "\"connecting\" was not written to output socket"
         );
     }
@@ -102,7 +102,7 @@ public class ControlWorkerTest {
 
         Assert.assertEquals(
                 outputStream.toByteArray(),
-                ControlWorker.CONNECTING_MESSAGE.getBytes(),
+                (ControlWorker.CONNECTING_MESSAGE + "\n").getBytes(),
                 "\"connecting\" was not written to output socket"
         );
     }
@@ -119,8 +119,25 @@ public class ControlWorkerTest {
 
         Assert.assertEquals(
                 outputStream.toByteArray(),
-                ControlWorker.INSUFFICIENT_ARGS_MESSAGE.getBytes(),
-                "\"connecting\" was not written to output socket"
+                (ControlWorker.INSUFFICIENT_ARGS_MESSAGE + "\n").getBytes(),
+                "Insufficient args message not returned"
+        );
+    }
+
+    /**
+     * Client requests file that server doesn't have
+     * @throws Exception
+     */
+    public void testGetFileNotFound() throws Exception {
+
+        fakeCommand("fileName");
+
+        worker.get();
+
+        Assert.assertEquals(
+                outputStream.toByteArray(),
+                (ControlWorker.FILE_NOT_FOUND_MESSAGE + "\n").getBytes(),
+                "Not found message not returned"
         );
     }
 
