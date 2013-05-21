@@ -51,6 +51,9 @@ public class ControlWorker implements Runnable {
                 case "ls":
                     ls();
                     break;
+                case "put":
+                    put();
+                    break;
                 default:
                     break;
             }
@@ -65,11 +68,12 @@ public class ControlWorker implements Runnable {
      */
     public void ls() {
 
-        logger.info("Handling \"ls\" command");
+        logger.info("handling \"ls\"");
 
         // respond to request with "connecting"
         socketWriter.println(CONNECTING_MESSAGE);
         socketWriter.flush();
+
         // open a new data connection with which to send data
         // todo open data connection
     }
@@ -78,8 +82,25 @@ public class ControlWorker implements Runnable {
 
     }
 
-    public void put(String file, short port) {
+    /**
+     * Handle a request to upload a file
+     */
+    public void put() {
 
+        String fileName;
+        try {
+            fileName = socketReader.readLine();
+        }
+        catch (IOException e) {
+            logger.warn("Insufficient arguments supplied to put command");
+            return;
+        }
+
+        // fileName will always be the second line
+        logger.info("handling \"put " + fileName + "\"");
+
+        socketWriter.println(CONNECTING_MESSAGE);
+        socketWriter.flush();
     }
 
     // region Setters and Getters

@@ -64,9 +64,20 @@ public class ControlWorkerTest {
     /**
      * Test basic put
      */
-    public void testPut() {
+    public void testPut() throws Exception {
 
+        fakeCommand("put\nfileToUpload\n");
 
+        // create a worker spy so we can confirm which methods were invoked
+        ControlWorker workerSpy = spy(worker);
+
+        // the method to test
+        workerSpy.run();
+
+        verify(workerSpy, times(1)).put();
+
+        Assert.assertEquals(outputStream.toByteArray(), "connecting\n".getBytes(),
+                "\"connecting\" was not written to output socket");
     }
 
     /**
