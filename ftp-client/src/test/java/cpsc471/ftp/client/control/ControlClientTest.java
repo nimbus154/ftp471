@@ -116,4 +116,35 @@ public class ControlClientTest {
 
         client.put(mockFile); // should throw an exception
     }
+
+    /**
+     * Successful get request
+     * @throws Exception
+     */
+    public void testGetFileExists() throws Exception {
+
+        String fileName = "serverFile";
+        client.get(fileName);
+
+        Assert.assertEquals(
+                outputStream.toByteArray(),
+                ("get\n" + fileName + "\n").getBytes(),
+                "\"get\" command improperly written to socket"
+        );
+    }
+
+    /**
+     * Request a file not found on the server
+     * @throws Exception
+     */
+    @Test(expectedExceptions = FileNotFoundException.class)
+    public void testGetFileDoesNotExist() throws Exception {
+
+        // fake a "not found" server response
+        inputStream = new ByteArrayInputStream("not found".getBytes());
+        when(socket.getInputStream()).thenReturn(inputStream);
+        client.setSocket(socket);
+
+        client.get("serverFile"); // should throw exception
+    }
 }

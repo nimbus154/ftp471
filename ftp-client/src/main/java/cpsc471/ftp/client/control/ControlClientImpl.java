@@ -86,7 +86,23 @@ public class ControlClientImpl implements ControlClient {
     @Override
     public void get(String remoteFile)
         throws FileNotFoundException {
-        //To change body of implemented methods use File | Settings | File Templates.
+
+        // send get request to server
+        socketWriter.println("get");
+        socketWriter.println(remoteFile);
+        socketWriter.flush();
+
+        String serverResponse = null;
+        try {
+            serverResponse = socketReader.readLine();
+        }
+        catch (IOException e) {
+            logger.warn("Unable to read from socket: " + e.getMessage(), e);
+        }
+
+        if(serverResponse != "connecting") {
+            throw new FileNotFoundException("Server could not find file.");
+        }
     }
 
     @Override
