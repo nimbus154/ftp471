@@ -57,8 +57,11 @@ public class ControlWorkerTest {
 
         verify(workerSpy, times(1)).ls();
 
-        Assert.assertEquals(outputStream.toByteArray(), "connecting\n".getBytes(),
-                "\"connecting\" was not written to output socket");
+        Assert.assertEquals(
+                outputStream.toByteArray(),
+                ControlWorker.CONNECTING_MESSAGE.getBytes(),
+                "\"connecting\" was not written to output socket"
+        );
     }
 
     /**
@@ -76,8 +79,49 @@ public class ControlWorkerTest {
 
         verify(workerSpy, times(1)).put();
 
-        Assert.assertEquals(outputStream.toByteArray(), "connecting\n".getBytes(),
-                "\"connecting\" was not written to output socket");
+        Assert.assertEquals(
+                outputStream.toByteArray(),
+                ControlWorker.CONNECTING_MESSAGE.getBytes(),
+                "\"connecting\" was not written to output socket"
+        );
+    }
+
+    /**
+     * User gets a file; file exists
+     */
+    public void testGetFileFound() throws Exception {
+
+        fakeCommand("get\nfile1\n");
+        // create a worker spy so we can confirm which methods were invoked
+        ControlWorker workerSpy = spy(worker);
+
+        // the method to test
+        workerSpy.run();
+
+        verify(workerSpy, times(1)).get();
+
+        Assert.assertEquals(
+                outputStream.toByteArray(),
+                ControlWorker.CONNECTING_MESSAGE.getBytes(),
+                "\"connecting\" was not written to output socket"
+        );
+    }
+
+    /**
+     * Omit file name from message
+     * @throws Exception
+     */
+    public void testGetInsufficientArgs() throws Exception {
+
+        fakeCommand("");
+
+        worker.get();
+
+        Assert.assertEquals(
+                outputStream.toByteArray(),
+                ControlWorker.INSUFFICIENT_ARGS_MESSAGE.getBytes(),
+                "\"connecting\" was not written to output socket"
+        );
     }
 
     /**
