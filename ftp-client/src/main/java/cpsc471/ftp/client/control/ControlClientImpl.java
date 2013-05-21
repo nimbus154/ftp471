@@ -100,7 +100,7 @@ public class ControlClientImpl implements ControlClient {
             logger.warn("Unable to read from socket: " + e.getMessage(), e);
         }
 
-        if(serverResponse != "connecting") {
+        if(!serverResponse.equals("connecting")) {
             throw new FileNotFoundException("Server could not find file.");
         }
     }

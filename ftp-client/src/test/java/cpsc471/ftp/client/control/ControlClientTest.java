@@ -123,12 +123,15 @@ public class ControlClientTest {
      */
     public void testGetFileExists() throws Exception {
 
+        inputStream = new ByteArrayInputStream("connecting".getBytes());
+        when(socket.getInputStream()).thenReturn(inputStream);
+        client.setSocket(socket);
         String fileName = "serverFile";
         client.get(fileName);
 
         Assert.assertEquals(
-                outputStream.toByteArray(),
-                ("get\n" + fileName + "\n").getBytes(),
+                new String(outputStream.toByteArray()),
+                "get\n" + fileName + "\n",
                 "\"get\" command improperly written to socket"
         );
     }
