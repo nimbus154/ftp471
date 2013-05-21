@@ -108,8 +108,8 @@ public class ControlClientTest {
         client.put(mockFile);
 
         Assert.assertEquals(
-                outputStream.toByteArray(),
-                ("put\n" + fileName + "\n").getBytes(),
+                new String(outputStream.toByteArray()),
+                "put\n" + fileName + "\n",
                 "\"put\" command improperly written to socket"
         );
     }
