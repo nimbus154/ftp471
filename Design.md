@@ -53,6 +53,13 @@ The server responds by attempting to connect to the client on the ephemeral
 port.
 
 ###### Client Request
+Format
+```
+get\n
+[file to download]\n
+[ephemeral port]\n
+```
+Example: 
 ```
 get\n
 secret_knowledge.txt\n
@@ -84,6 +91,13 @@ The server responds by attempting to connect to the client on the ephemeral
 port.
 
 ###### Client Request
+Format:
+```
+put\n
+[file to upload]\n
+[ephemeral port]\n
+```
+Example:
 ```
 put\n
 secret_knowledge.txt\n
@@ -109,38 +123,30 @@ not found\n
 `ls` lists all files in the server-side directory.
 
 ###### Client Request
+Format:
 ```
-ls
+ls\n
+[ephemeral port]\n
+```
+
+Example:
+```
+ls\n
+1234\n
 ```
 
 ###### Server Response
 ```
 connecting
+```
+
+If insufficient arugments:
+```
+insufficient arguments\n
 ```
 
 ### Data Channel
 The data channel is where files are actually transferred. At this time, I'm not
-exactly sure how this will work. Since it uses sendfile, I don't think this will
-be as involved.
-
-I must handle: 
- * throttling sender
- * errors in file transfer
-
-The server responds by attempting to connect to the client on the ephemeral
-port.
-
-###### Client Request
-```
-put secret_knowledge.txt 1234
-```
-
-###### Server Response
-```
-connecting
-```
-### Data Channel
-The data channel is where fiels are actually transferred. At this time, I'm not
 exactly sure how this will work. Since it uses sendfile, I don't think this will
 be as involved.
 
