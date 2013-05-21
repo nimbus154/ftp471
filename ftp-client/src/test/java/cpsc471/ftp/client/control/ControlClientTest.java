@@ -71,8 +71,11 @@ public class ControlClientTest {
 
         client.ls();
         // ls should be written to wire
-        Assert.assertEquals(outputStream.toByteArray(), "ls\n".getBytes(),
-                "\"ls\" wasn't written to socket");
+        Assert.assertEquals(
+                new String(outputStream.toByteArray()),
+                "ls\n",
+                "\"ls\" wasn't written to socket"
+        );
     }
 
     /**
@@ -84,6 +87,12 @@ public class ControlClientTest {
         client.quit();
 
         verify(socket, times(1)).close();
+        Assert.assertEquals(
+                new String(outputStream.toByteArray()),
+                "quit\n",
+                "\"quit\" command improperly written to socket"
+        );
+
     }
 
     /**

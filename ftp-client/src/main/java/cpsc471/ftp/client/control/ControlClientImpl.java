@@ -109,6 +109,9 @@ public class ControlClientImpl implements ControlClient {
     public void quit() {
 
         try {
+            // send quit signal to server
+            socketWriter.println("quit");
+            socketWriter.flush();
             socket.close();
         }
         catch (IOException e) {

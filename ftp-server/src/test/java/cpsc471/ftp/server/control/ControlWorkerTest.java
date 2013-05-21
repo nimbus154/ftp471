@@ -172,6 +172,33 @@ public class ControlWorkerTest {
     }
 
     /**
+     * Ensure the quit() method is invoked when the command is sent
+     */
+    public void testCallQuit() throws Exception {
+
+        fakeCommand("quit\n");
+
+        // create a worker spy so we can confirm which methods were invoked
+        ControlWorker workerSpy = spy(worker);
+
+        // the method to test
+        workerSpy.handleCmd();
+
+        verify(workerSpy, times(1)).quit();
+    }
+
+    /**
+     * Ensure quit closes the connection
+     * @throws Exception
+     */
+    public void testQuitCloseSocket() throws Exception {
+
+        fakeCommand("quit\n"); // ensures socket won't throw null pointer
+        worker.quit();
+        verify(socket, times(1)).close();
+    }
+
+    /**
      * Populate the mock socket with a command, as if sent from client
      * @param commandsSent
      */

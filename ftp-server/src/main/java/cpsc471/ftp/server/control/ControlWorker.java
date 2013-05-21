@@ -45,7 +45,7 @@ public class ControlWorker implements Runnable {
     public void run() {
         logger.info("Servicing connection");
 
-        while(socket.isConnected()) {
+        while(!socket.isClosed()) {
             handleCmd();
         }
     }
@@ -65,12 +65,29 @@ public class ControlWorker implements Runnable {
                 case "get":
                     get();
                     break;
+                case "quit":
+                    quit();
+                    break;
                 default:
                     break;
             }
         }
         catch (IOException e) {
             logger.warn("Nothing in input buffer");
+        }
+    }
+
+    /**
+     * Handle quit command
+     */
+    public void quit() {
+
+        logger.info("Closing connection");
+        try {
+            socket.close();
+        }
+        catch (IOException e) {
+            logger.warn("Unable to close socket: " + e.getMessage(), e);
         }
     }
 
