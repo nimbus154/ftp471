@@ -6,6 +6,8 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -82,5 +84,36 @@ public class ControlClientTest {
         client.quit();
 
         verify(socket, times(1)).close();
+    }
+
+    /**
+     * Test basic put, with a file that exists
+     */
+    public void testPutFileExists() throws Exception {
+
+        String fileName = "fileToUpload";
+        File mockFile = mock(File.class);
+        when(mockFile.exists()).thenReturn(true);
+        when(mockFile.getName()).thenReturn(fileName);
+
+        client.put(mockFile);
+
+        Assert.assertEquals(
+                outputStream.toByteArray(),
+                ("put\n" + fileName + "\n").getBytes(),
+                "\"put\" command improperly written to socket"
+        );
+    }
+
+    /**
+     * Attempt to put a file that does not exist
+     */
+    @Test(expectedExceptions = FileNotFoundException.class)
+    public void testPutFileDoesNotExist() throws Exception {
+
+        File mockFile = mock(File.class);
+        when(mockFile.exists()).thenReturn(false);
+
+        client.put(mockFile); // should throw an exception
     }
 }

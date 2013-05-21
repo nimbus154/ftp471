@@ -59,7 +59,28 @@ public class ControlClientImpl implements ControlClient {
     @Override
     public void put(String localFile)
         throws FileNotFoundException {
-        //To change body of implemented methods use File | Settings | File Templates.
+
+        put(new File(localFile));
+    }
+
+    /**
+     * Upload a file to the server
+     * @param localFile the file to upload
+     * @throws FileNotFoundException file to upload
+     */
+    public void put(File localFile)
+            throws FileNotFoundException {
+
+        if(localFile.exists()) {
+            socketWriter.println("put");
+            socketWriter.println(localFile.getName());
+            socketWriter.flush();
+        }
+        else {
+            throw new FileNotFoundException(
+                    "File \"" + localFile.getName() + "\" does not exist"
+            );
+        }
     }
 
     @Override
