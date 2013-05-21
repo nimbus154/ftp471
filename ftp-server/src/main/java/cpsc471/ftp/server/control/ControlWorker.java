@@ -128,9 +128,15 @@ public class ControlWorker implements Runnable {
         String fileName;
         try {
             fileName = socketReader.readLine();
+
+            if(fileName == null || fileName.length() == 0) {
+                throw new IOException("fileName blank");
+            }
         }
         catch (IOException e) {
             logger.warn("Insufficient arguments supplied to put command");
+            socketWriter.println(INSUFFICIENT_ARGS_MESSAGE);
+            socketWriter.flush();
             return;
         }
 

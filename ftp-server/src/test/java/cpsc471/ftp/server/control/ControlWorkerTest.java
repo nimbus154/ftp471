@@ -108,6 +108,23 @@ public class ControlWorkerTest {
     }
 
     /**
+     * Insufficient args supplied to put
+     * @throws Exception
+     */
+    public void testPutInsufficientArgs() throws Exception {
+
+        fakeCommand("");
+
+        worker.put();
+
+        Assert.assertEquals(
+                outputStream.toByteArray(),
+                (ControlWorker.INSUFFICIENT_ARGS_MESSAGE + "\n").getBytes(),
+                "Insufficient args message not returned"
+        );
+    }
+
+    /**
      * Omit file name from message
      * @throws Exception
      */
