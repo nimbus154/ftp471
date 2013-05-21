@@ -115,9 +115,7 @@ ls
 
 ###### Server Response
 ```
-file1\n
-file2\n
-file3\n
+connecting
 ```
 
 ### Data Channel
