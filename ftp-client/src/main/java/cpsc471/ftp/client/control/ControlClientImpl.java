@@ -84,7 +84,8 @@ public class ControlClientImpl implements ControlClient {
     }
 
     @Override
-    public void get(String remoteFile) {
+    public void get(String remoteFile)
+        throws FileNotFoundException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

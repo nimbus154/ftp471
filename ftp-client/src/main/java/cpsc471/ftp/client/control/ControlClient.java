@@ -22,8 +22,9 @@ public interface ControlClient {
     /**
      * Retrieve a file from the server
      * @param remoteFile file to retrieve
+     * @throws FileNotFoundException if remoteFile isn't found on server
      */
-    public void get(String remoteFile);
+    public void get(String remoteFile) throws FileNotFoundException;
 
     /**
      * Terminate connection with server

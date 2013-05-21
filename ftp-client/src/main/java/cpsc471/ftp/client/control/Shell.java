@@ -135,7 +135,15 @@ public class Shell {
     public void handleGet(String[] args) {
 
         if(args.length == 2) {
-            client.get(args[1]);
+            try {
+                client.get(args[1]);
+            }
+            catch (FileNotFoundException e) {
+                System.err.println(
+                        "Unable to download \"" + args[1] + "\"; " +
+                                "file not found on server."
+                );
+            }
         }
         else {
             System.out.println(HELP_GET);
