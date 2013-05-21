@@ -60,7 +60,7 @@ public class ShellTest {
     /**
      * Get command
      */
-    public void testGet() {
+    public void testGet() throws Exception {
 
         String[] args = {"get", "remoteFile"};
         // Get command should stay in shell
@@ -73,7 +73,7 @@ public class ShellTest {
     /**
      * Get command invalid number of args
      */
-    public void testGetInvalidNumArgs() {
+    public void testGetInvalidNumArgs() throws Exception {
 
         String[] args = {"get", "remoteFile", "remoteFile2"};
         // Get command should stay in shell
