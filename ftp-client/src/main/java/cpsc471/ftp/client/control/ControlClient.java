@@ -18,7 +18,7 @@ public interface ControlClient {
      * @param localFile file to upload
      * @throws FileNotFoundException if localFile does not refer to a valid file
      */
-    public void put(String localFile) throws FileNotFoundException;
+    public void put(String localFile) throws FileNotFoundException, IOException;
 
     /**
      * Retrieve a file from the server

@@ -79,8 +79,18 @@ public class ControlClientTest {
                 "\"ls\" wasn't written to socket"
         );
 
+        assertPortSent(dataSent, 1);
+    }
+
+    /**
+     * Assert port was sent to server
+     * @param args array of args sent to server
+     * @param portIndex array index where port should be
+     */
+    private void assertPortSent(String[] args, int portIndex) {
+
         try {
-            int port = Integer.parseInt(dataSent[1]);
+            int port = Integer.parseInt(args[portIndex]);
             Assert.assertTrue(port > 1024, "Ephemeral port not generated!");
         }
         catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
@@ -117,11 +127,19 @@ public class ControlClientTest {
 
         client.put(mockFile);
 
+        String[] dataSent = new String(outputStream.toByteArray()).split("\n");
         Assert.assertEquals(
-                new String(outputStream.toByteArray()),
-                "put\n" + fileName + "\n",
-                "\"put\" command improperly written to socket"
+                dataSent[0],
+                "put",
+                "\"put\" command improperly written to socket: command not written"
         );
+        Assert.assertEquals(
+                dataSent[1],
+                fileName,
+                "\"put\" command improperly written to socket: fileName not written"
+        );
+
+        assertPortSent(dataSent, 2);
     }
 
     /**

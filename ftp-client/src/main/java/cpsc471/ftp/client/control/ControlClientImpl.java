@@ -60,7 +60,7 @@ public class ControlClientImpl implements ControlClient {
 
     @Override
     public void put(String localFile)
-        throws FileNotFoundException {
+        throws FileNotFoundException, IOException {
 
         put(new File(localFile));
     }
@@ -71,13 +71,14 @@ public class ControlClientImpl implements ControlClient {
      * @throws FileNotFoundException file to upload
      */
     public void put(File localFile)
-            throws FileNotFoundException {
+            throws FileNotFoundException, IOException {
 
         if(localFile.exists()) {
             socketWriter.println("put");
             socketWriter.println(localFile.getName());
-            // create a new server
-            // get ephemeral port, send it to control server
+
+            DataChannelServer dataChannel = new DataChannelServer();
+            socketWriter.println(dataChannel.getPort());
             socketWriter.flush();
             // upload file, catch errors
         }

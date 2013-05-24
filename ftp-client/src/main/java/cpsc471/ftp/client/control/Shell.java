@@ -160,7 +160,7 @@ public class Shell {
             try {
                 client.put(args[1]);
             }
-            catch (FileNotFoundException e) {
+            catch (IOException e) {
                 System.err.println(
                         "Unable to upload \"" + args[1] + "\"; " +
                         "unable to find file."
