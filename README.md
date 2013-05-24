@@ -20,22 +20,22 @@ with `java -jar <jar name>`.
 
 ### Server
 ```bash
-server <port to listen on>
+./serv <port to listen on>
 ```
 
 Ex:
 ```bash
-server 2020 # listen on port 2020
+./serv 2020 # listen on port 2020
 ```
 
 ### Client
 ```bash
-cli <host> <port>
+./cli <host> <port>
 ```
 
 Ex:
 ```bash
-cli google.com 2020 # connect to google.com on port 2020
+./cli google.com 2020 # connect to google.com on port 2020
 ```
 
 ## Commands

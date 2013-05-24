@@ -47,7 +47,7 @@ public class ControlDispatcher {
 
         System.out.println(
                 "Usage:\n" +
-                        "\tserver <port>"
+                        "serv <port>"
         );
     }
 
