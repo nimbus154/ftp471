@@ -138,7 +138,7 @@ public class Shell {
             try {
                 client.get(args[1]);
             }
-            catch (FileNotFoundException e) {
+            catch (IOException e) {
                 System.err.println(
                         "Unable to download \"" + args[1] + "\"; " +
                                 "file not found on server."

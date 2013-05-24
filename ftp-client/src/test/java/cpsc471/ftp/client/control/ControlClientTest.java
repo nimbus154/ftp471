@@ -166,11 +166,21 @@ public class ControlClientTest {
         String fileName = "serverFile";
         client.get(fileName);
 
+        String[] dataSent = new String(outputStream.toByteArray()).split("\n");
+
         Assert.assertEquals(
-                new String(outputStream.toByteArray()),
-                "get\n" + fileName + "\n",
-                "\"get\" command improperly written to socket"
+                dataSent[0],
+                "get",
+                "\"get\" command improperly written to socket: command omitted"
         );
+
+        Assert.assertEquals(
+                dataSent[1],
+                fileName,
+                "\"get\" command improperly written to socket: fileName omitted"
+        );
+
+        assertPortSent(dataSent, 2);
     }
 
     /**

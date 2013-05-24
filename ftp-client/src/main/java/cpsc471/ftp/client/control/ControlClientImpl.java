@@ -91,13 +91,14 @@ public class ControlClientImpl implements ControlClient {
 
     @Override
     public void get(String remoteFile)
-        throws FileNotFoundException {
+        throws FileNotFoundException, IOException {
 
         // send get request to server
         socketWriter.println("get");
         socketWriter.println(remoteFile);
-        // create a new server
-        // get ephemeral port, send it to control server
+
+        DataChannelServer dataChannel = new DataChannelServer();
+        socketWriter.println(dataChannel.getPort());
         socketWriter.flush();
 
         String serverResponse = null;
