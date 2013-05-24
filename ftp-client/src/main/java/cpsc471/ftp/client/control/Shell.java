@@ -107,7 +107,7 @@ public class Shell {
 
         switch(cmd) {
             case "ls":
-                client.ls();
+                handleLs();
                 break;
             case "get":
                 handleGet(args);
@@ -169,6 +169,18 @@ public class Shell {
         }
         else {
             System.out.println(HELP_PUT);
+        }
+    }
+
+    /**
+     * Handle the ls command
+     */
+    public void handleLs() {
+        try {
+            client.ls();
+        }
+        catch(IOException e) {
+            System.err.println("Unable to retrieve file listing from server");
         }
     }
 

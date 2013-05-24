@@ -86,7 +86,7 @@ public class ShellTest {
     /**
      * Invoke the ls command
      */
-    public void testLs() {
+    public void testLs() throws Exception {
 
         String[] args = {"ls"};
         // Get command should stay in shell

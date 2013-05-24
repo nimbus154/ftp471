@@ -1,5 +1,6 @@
 package cpsc471.ftp.client.control;
 
+import cpsc471.ftp.data.DataChannelServer;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -48,11 +49,11 @@ public class ControlClientImpl implements ControlClient {
     }
 
     @Override
-    public void ls() {
+    public void ls() throws IOException {
 
         socketWriter.println("ls");
-        // DataChannelServer dataChannel = new DataChannelServer();
-        // socketWriter.println(dataChannel.getPort());
+        DataChannelServer dataChannel = new DataChannelServer();
+        socketWriter.println(dataChannel.getPort());
         socketWriter.flush();
         // socketWriter.download(null); // will print to stdout
     }

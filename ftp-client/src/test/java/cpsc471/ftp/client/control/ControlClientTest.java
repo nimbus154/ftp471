@@ -70,12 +70,22 @@ public class ControlClientTest {
     public void testLs() throws Exception {
 
         client.ls();
+
+        String[] dataSent = new String(outputStream.toByteArray()).split("\n");
         // ls should be written to wire
         Assert.assertEquals(
-                new String(outputStream.toByteArray()),
-                "ls\n",
+                dataSent[0],
+                "ls",
                 "\"ls\" wasn't written to socket"
         );
+
+        try {
+            int port = Integer.parseInt(dataSent[1]);
+            Assert.assertTrue(port > 1024, "Ephemeral port not generated!");
+        }
+        catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+            Assert.fail("No port sent to server");
+        }
     }
 
     /**

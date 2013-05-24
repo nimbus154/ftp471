@@ -1,6 +1,7 @@
 package cpsc471.ftp.client.control;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Client for the control channel
@@ -10,7 +11,7 @@ public interface ControlClient {
     /**
      * List files on server
      */
-    public void ls();
+    public void ls() throws IOException;
 
     /**
      * Upload a file to the server
