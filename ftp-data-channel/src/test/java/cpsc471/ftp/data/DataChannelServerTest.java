@@ -4,9 +4,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.net.ServerSocket;
-import java.net.Socket;
-
 /**
  * Tests for DataChannelServer
  */
