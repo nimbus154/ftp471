@@ -11,8 +11,9 @@ public class DataChannelServer extends DataChannel {
 
     private ServerSocket socket;
 
-    public DataChannelServer() {
+    public DataChannelServer() throws IOException {
 
+        socket = new ServerSocket(0);
     }
 
     @Override
@@ -25,7 +26,16 @@ public class DataChannelServer extends DataChannel {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public short getPort() {
-        return (short)socket.getLocalPort();
+    public int getPort() {
+
+        return socket.getLocalPort();
+    }
+
+    public ServerSocket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(ServerSocket socket) {
+        this.socket = socket;
     }
 }
