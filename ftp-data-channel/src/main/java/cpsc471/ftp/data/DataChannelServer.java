@@ -9,8 +9,6 @@ import java.net.ServerSocket;
  */
 public class DataChannelServer extends DataChannel {
 
-    private short port;
-
     private ServerSocket socket;
 
     public DataChannelServer() {
@@ -28,6 +26,6 @@ public class DataChannelServer extends DataChannel {
     }
 
     public short getPort() {
-        return port;
+        return (short)socket.getLocalPort();
     }
 }
