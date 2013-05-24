@@ -11,7 +11,7 @@
   <modules>
 	<module>ftp-server</module>
 	<module>ftp-client</module>
-    <module>ftp-common</module>
+    <module>ftp-data-channel</module>
   </modules>
 
     <properties>
