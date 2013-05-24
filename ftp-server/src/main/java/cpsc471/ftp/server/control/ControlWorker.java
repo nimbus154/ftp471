@@ -113,7 +113,7 @@ public class ControlWorker implements Runnable {
     public void get() {
 
         String fileName = nextArg();
-        // get port
+        //int port = extractPort();
         if(fileName == null /* || port == null */) {
             logger.warn("Insufficient arguments supplied to get command");
             insufficientArgs();
@@ -139,8 +139,8 @@ public class ControlWorker implements Runnable {
     public void put() {
 
         String fileName = nextArg();
-        // get port
-        if(fileName == null /* || port == null */) {
+        //int port = extractPort();
+        if(fileName == null /*|| port == 0*/) {
             logger.warn("Insufficient arguments supplied to put command");
             insufficientArgs();
             return;
@@ -173,6 +173,27 @@ public class ControlWorker implements Runnable {
             return null;
         }
         return arg;
+    }
+
+    /**
+     * Extracts a port number from the argument list
+     * @return port number or 0 on failure
+     */
+    private int extractPort() {
+
+        String rawArgument = nextArg();
+        int port = 0;
+
+        if(rawArgument != null) {
+            try {
+                port = Integer.parseInt(rawArgument);
+            }
+            catch(NumberFormatException e) {
+                port = 0;
+            }
+        }
+
+        return port;
     }
 
     /**
