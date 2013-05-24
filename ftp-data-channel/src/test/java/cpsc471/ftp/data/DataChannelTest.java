@@ -8,5 +8,10 @@ import org.testng.annotations.Test;
 @Test
 public class DataChannelTest {
 
+    /**
+     * Listening on the data channel should use an ephemeral port
+     */
+    public void testEphemeralPort() {
 
+    }
 }
