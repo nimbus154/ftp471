@@ -1,11 +1,10 @@
 package cpsc471.ftp.data;
 
+import org.testng.annotations.Test;
+
 /**
- * Created with IntelliJ IDEA.
- * User: nimbus
- * Date: 5/24/13
- * Time: 9:17 AM
- * To change this template use File | Settings | File Templates.
+ * Tests for DataChannelServer
  */
+@Test
 public class DataChannelServerTest {
 }
