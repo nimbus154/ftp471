@@ -51,9 +51,10 @@ public class ControlClientImpl implements ControlClient {
     public void ls() {
 
         socketWriter.println("ls");
+        // DataChannelServer dataChannel = new DataChannelServer();
+        // socketWriter.println(dataChannel.getPort());
         socketWriter.flush();
-
-        // todo add data transfer
+        // socketWriter.download(null); // will print to stdout
     }
 
     @Override
@@ -74,7 +75,10 @@ public class ControlClientImpl implements ControlClient {
         if(localFile.exists()) {
             socketWriter.println("put");
             socketWriter.println(localFile.getName());
+            // create a new server
+            // get ephemeral port, send it to control server
             socketWriter.flush();
+            // upload file, catch errors
         }
         else {
             throw new FileNotFoundException(
@@ -90,6 +94,8 @@ public class ControlClientImpl implements ControlClient {
         // send get request to server
         socketWriter.println("get");
         socketWriter.println(remoteFile);
+        // create a new server
+        // get ephemeral port, send it to control server
         socketWriter.flush();
 
         String serverResponse = null;
@@ -103,6 +109,8 @@ public class ControlClientImpl implements ControlClient {
         if(!serverResponse.equals("connecting")) {
             throw new FileNotFoundException("Server could not find file.");
         }
+        // download file, catch errors
+        // this may not work b/c of waiting for response from server
     }
 
     @Override

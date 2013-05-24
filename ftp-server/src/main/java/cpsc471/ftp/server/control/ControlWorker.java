@@ -98,11 +98,13 @@ public class ControlWorker implements Runnable {
 
         logger.info("handling \"ls\"");
 
+        // extract port
         // respond to request with "connecting"
         connect();
 
         // open a new data connection with which to send data
-        // todo open data connection
+        // execute the ls command locally, get the values
+        // upload that value to the client
     }
 
     /**
@@ -111,7 +113,8 @@ public class ControlWorker implements Runnable {
     public void get() {
 
         String fileName = nextArg();
-        if(fileName == null) {
+        // get port
+        if(fileName == null /* || port == null */) {
             logger.warn("Insufficient arguments supplied to get command");
             insufficientArgs();
             return;
@@ -125,6 +128,9 @@ public class ControlWorker implements Runnable {
         logger.info("handling \"get\"");
         // respond to request with "connecting"
         connect();
+
+        // open socket connection to client
+        // "upload" file from client
     }
 
     /**
@@ -133,7 +139,8 @@ public class ControlWorker implements Runnable {
     public void put() {
 
         String fileName = nextArg();
-        if(fileName == null) {
+        // get port
+        if(fileName == null /* || port == null */) {
             logger.warn("Insufficient arguments supplied to put command");
             insufficientArgs();
             return;
@@ -142,6 +149,8 @@ public class ControlWorker implements Runnable {
         // fileName will always be the second line
         logger.info("handling \"put " + fileName + "\"");
         connect();
+        // open socket connection to client
+        // download file from client
     }
 
     /**
