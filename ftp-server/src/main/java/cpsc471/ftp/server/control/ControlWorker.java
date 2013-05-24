@@ -160,19 +160,19 @@ public class ControlWorker implements Runnable {
      */
     private String nextArg() {
 
-        String fileName;
+        String arg;
 
         try {
-            fileName = socketReader.readLine();
+            arg = socketReader.readLine();
 
-            if(fileName == null || fileName.length() == 0) {
-                throw new IOException("fileName blank");
+            if(arg == null || arg.length() == 0) {
+                throw new IllegalArgumentException("argument omitted");
             }
         }
-        catch (IOException e) {
+        catch (IllegalArgumentException | IOException e) {
             return null;
         }
-        return fileName;
+        return arg;
     }
 
     /**
