@@ -1,5 +1,6 @@
 package cpsc471.ftp.server.control;
 
+import cpsc471.ftp.data.DataChannelClient;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -104,13 +105,19 @@ public class ControlWorker implements Runnable {
             insufficientArgs();
             return;
         }
-        // extract port
-        // respond to request with "connecting"
-        connect();
+        connect(); // send message "connecting" to client
 
-        // open a new data connection with which to send data
-        // execute the ls command locally, get the values
-        // upload that value to the client
+        // transfer data
+        try {
+            DataChannelClient dataChannel =
+                    new DataChannelClient(socket.getInetAddress(), port);
+            // todo figure out how to do ls from java
+            dataChannel.upload("list of file contents");
+            dataChannel.close();
+        }
+        catch(IOException e) {
+            // todo handle io exception
+        }
     }
 
     /**

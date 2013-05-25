@@ -55,7 +55,7 @@ public class ControlClientImpl implements ControlClient {
         DataChannelServer dataChannel = new DataChannelServer();
         socketWriter.println(dataChannel.getPort());
         socketWriter.flush();
-        // socketWriter.download(null); // will print to stdout
+        dataChannel.download(null); // will print to stdout
     }
 
     @Override
