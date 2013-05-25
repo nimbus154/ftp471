@@ -73,6 +73,23 @@ public class ControlWorkerTest {
     }
 
     /**
+     * Insufficient args supplied to ls
+     * @throws Exception
+     */
+    public void testLsInsufficientArgs() throws Exception {
+
+        fakeCommand("");
+
+        worker.ls();
+
+        Assert.assertEquals(
+                new String(outputStream.toByteArray()),
+                ControlWorker.INSUFFICIENT_ARGS_MESSAGE + "\n",
+                "Insufficient args message not returned"
+        );
+    }
+
+    /**
      * Test basic put
      */
     public void testPut() throws Exception {

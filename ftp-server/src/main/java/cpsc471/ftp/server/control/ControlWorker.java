@@ -98,6 +98,12 @@ public class ControlWorker implements Runnable {
 
         logger.info("handling \"ls\"");
 
+        int port = extractPort();
+        if(port == 0) {
+            logger.warn("Insufficient arguments supplied to ls command");
+            insufficientArgs();
+            return;
+        }
         // extract port
         // respond to request with "connecting"
         connect();
