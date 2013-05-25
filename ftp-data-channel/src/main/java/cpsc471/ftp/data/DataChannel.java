@@ -20,4 +20,17 @@ public abstract class DataChannel {
      * @param file file to upload
      */
     public abstract void upload(File file) throws IOException;
+
+    /**
+     * Upload a large string
+     * @param s string to upload
+     * @throws IOException thrown if connection issue
+     */
+    public abstract void upload(String s) throws IOException;
+
+    /**
+     * Close the data channel
+     * @throws IOException if unable to close
+     */
+    public abstract void close() throws IOException;
 }

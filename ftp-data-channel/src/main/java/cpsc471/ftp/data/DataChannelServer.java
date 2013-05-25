@@ -26,6 +26,17 @@ public class DataChannelServer extends DataChannel {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @Override
+    public void upload(String s) throws IOException {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void close() throws IOException {
+
+        socket.close();
+    }
+
     public int getPort() {
 
         return socket.getLocalPort();
