@@ -2,6 +2,8 @@ package cpsc471.ftp.data;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.channels.FileChannel;
+import java.nio.channels.SocketChannel;
 
 /**
  * Used to transfer files and large messages.
@@ -9,46 +11,69 @@ import java.net.Socket;
  */
 public abstract class DataChannel {
 
-    protected PrintWriter socketWriter;
+    // thanks to https://www.ibm.com/developerworks/library/j-zerocopy/
+    // for the introduction to SocketChannels, FileChannels, and the
+    // transferTo method
 
-    protected BufferedReader socketReader;
-
-    protected Socket socket;
+    protected SocketChannel socketChannel;
 
     /**
-     * Set the socket to use for communications
-     * @param socket socket to set
+     * Set the socket channel to use for communications
+     * @param socketChannel socketChannel to set
      * @throws IOException if unable to read from socket
      */
-    public void setSocket(Socket socket) throws IOException {
+    public void setSocketChannel(SocketChannel socketChannel)
+            throws IOException {
 
-        this.socket = socket;
-        socketWriter = new PrintWriter(socket.getOutputStream());
-        socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.socketChannel = socketChannel;
+        // block allows for more data to transfer more easily, though it's less scalable
+        socketChannel.configureBlocking(true);
     }
 
     /**
      * Download a file
      * @param file file to download
      */
-    public abstract void download(File file) throws IOException;
+    public void download(File file) throws IOException {
+
+        // todo implement
+    };
 
     /**
      * Upload a file
      * @param file file to upload
      */
-    public abstract void upload(File file) throws IOException;
+    public void upload(File file) throws IOException {
+
+        FileChannel fileChannel = new FileInputStream(file).getChannel();
+
+        // send the file
+        long bytesSent = 0, fileLength = file.length();
+        while(bytesSent < fileLength) {
+            bytesSent += fileChannel.transferTo(
+                    bytesSent, // byte offset from which to send
+                    fileLength - bytesSent, // number of bytes to send
+                    socketChannel // channel to which to send bytes
+            );
+        }
+    }
 
     /**
      * Upload a large string
      * @param s string to upload
      * @throws IOException thrown if connection issue
      */
-    public abstract void upload(String s) throws IOException;
+    public void upload(String s) throws IOException {
+
+        // todo implement
+    };
 
     /**
      * Close the data channel
      * @throws IOException if unable to close
      */
-    public abstract void close() throws IOException;
+    public void close() throws IOException {
+
+        socketChannel.close();
+    }
 }
