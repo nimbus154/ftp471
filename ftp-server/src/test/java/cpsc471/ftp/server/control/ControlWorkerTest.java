@@ -155,6 +155,23 @@ public class ControlWorkerTest {
     }
 
     /**
+     * Omit port; commands need port to connect to client on data channel
+     * @throws Exception
+     */
+    public void testPutOmitPort() throws Exception {
+
+        fakeCommand("filename\n");
+
+        worker.put();
+
+        Assert.assertEquals(
+                new String(outputStream.toByteArray()),
+                ControlWorker.INSUFFICIENT_ARGS_MESSAGE + "\n",
+                "Insufficient args message not returned"
+        );
+    }
+
+    /**
      * Omit file name from message
      * @throws Exception
      */

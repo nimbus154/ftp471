@@ -145,8 +145,8 @@ public class ControlWorker implements Runnable {
     public void put() {
 
         String fileName = nextArg();
-        //int port = extractPort();
-        if(fileName == null /*|| port == 0*/) {
+        int port = extractPort();
+        if(fileName == null || port == 0) {
             logger.warn("Insufficient arguments supplied to put command");
             insufficientArgs();
             return;
