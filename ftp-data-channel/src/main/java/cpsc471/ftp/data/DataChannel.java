@@ -1,13 +1,31 @@
 package cpsc471.ftp.data;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
 
 /**
  * Used to transfer files and large messages.
  * The actual file transfer portion of the FTP connection.
  */
 public abstract class DataChannel {
+
+    protected PrintWriter socketWriter;
+
+    protected BufferedReader socketReader;
+
+    protected Socket socket;
+
+    /**
+     * Set the socket to use for communications
+     * @param socket socket to set
+     * @throws IOException if unable to read from socket
+     */
+    public void setSocket(Socket socket) throws IOException {
+
+        this.socket = socket;
+        socketWriter = new PrintWriter(socket.getOutputStream());
+        socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    }
 
     /**
      * Download a file

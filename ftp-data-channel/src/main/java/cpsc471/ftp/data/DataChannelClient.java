@@ -1,7 +1,6 @@
 package cpsc471.ftp.data;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -9,8 +8,6 @@ import java.net.Socket;
  * Client for a data channel
  */
 public class DataChannelClient extends DataChannel {
-
-    private Socket socket;
 
     /**
      * Opens a data channel connection with a server
@@ -21,7 +18,7 @@ public class DataChannelClient extends DataChannel {
     public DataChannelClient(InetAddress address, int port)
         throws IOException {
 
-        socket = new Socket(address, port);
+        setSocket(new Socket(address, port));
     }
 
     @Override

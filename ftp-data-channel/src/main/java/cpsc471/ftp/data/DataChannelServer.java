@@ -1,7 +1,6 @@
 package cpsc471.ftp.data;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 
 /**
@@ -9,11 +8,15 @@ import java.net.ServerSocket;
  */
 public class DataChannelServer extends DataChannel {
 
-    private ServerSocket socket;
+    private ServerSocket serverSocket;
 
+    /**
+     * Opens a DataChannel server. Begins listening on an ephemeral port.
+     * @throws IOException
+     */
     public DataChannelServer() throws IOException {
 
-        socket = new ServerSocket(0);
+        serverSocket = new ServerSocket(0); // bind to ephemeral port
     }
 
     @Override
@@ -34,19 +37,19 @@ public class DataChannelServer extends DataChannel {
     @Override
     public void close() throws IOException {
 
-        socket.close();
+        serverSocket.close();
     }
 
     public int getPort() {
 
-        return socket.getLocalPort();
+        return serverSocket.getLocalPort();
     }
 
-    public ServerSocket getSocket() {
-        return socket;
+    public ServerSocket getServerSocket() {
+        return serverSocket;
     }
 
-    public void setSocket(ServerSocket socket) {
-        this.socket = socket;
+    public void setServerSocket(ServerSocket serverSocket) {
+        this.serverSocket = serverSocket;
     }
 }
