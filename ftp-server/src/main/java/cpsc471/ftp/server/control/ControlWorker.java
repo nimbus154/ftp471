@@ -105,7 +105,7 @@ public class ControlWorker implements Runnable {
             insufficientArgs();
             return;
         }
-        connect(); // send message "connecting" to client
+        connect(null); // send message "connecting" to client
 
         // transfer data
         try {
@@ -140,7 +140,9 @@ public class ControlWorker implements Runnable {
 
         logger.info("handling \"get\"");
         // respond to request with "connecting"
-        connect();
+        File file = new File(fileName);
+        String[] args = {Long.toString(file.length())};
+        connect(args);
 
         // open socket connection to client
         // "upload" file from client
@@ -161,7 +163,7 @@ public class ControlWorker implements Runnable {
 
         // fileName will always be the second line
         logger.info("handling \"put " + fileName + "\"");
-        connect();
+        connect(null);
         // open socket connection to client
         // download file from client
     }
@@ -221,8 +223,15 @@ public class ControlWorker implements Runnable {
 
     /**
      * Send a "connecting" response to client
+     * @param args Other arguments to send
      */
-    private void connect() {
+    private void connect(String[] args) {
+
+        if(args != null) {
+            for(String s : args) {
+                socketWriter.println(s);
+            }
+        }
 
         socketWriter.println(CONNECTING_MESSAGE);
         socketWriter.flush();
