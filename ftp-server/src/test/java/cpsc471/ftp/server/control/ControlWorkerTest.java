@@ -172,6 +172,26 @@ public class ControlWorkerTest {
     }
 
     /**
+     * Omit port from message
+     * @throws Exception
+     */
+    public void testGetOmitPort() throws Exception {
+
+        fakeCommand("fileName\n");
+
+        worker.get();
+
+        // this is a bit of a hack: the file is invalid
+        // but since the algorithm checks number of arguments first,
+        // it's safe to check for insufficient args
+        Assert.assertEquals(
+                new String(outputStream.toByteArray()),
+                ControlWorker.INSUFFICIENT_ARGS_MESSAGE + "\n",
+                "Insufficient args message not returned"
+        );
+    }
+
+    /**
      * Client requests file that server doesn't have
      * @throws Exception
      */

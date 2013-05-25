@@ -119,8 +119,8 @@ public class ControlWorker implements Runnable {
     public void get() {
 
         String fileName = nextArg();
-        //int port = extractPort();
-        if(fileName == null /* || port == null */) {
+        int port = extractPort();
+        if(fileName == null  || port == 0) {
             logger.warn("Insufficient arguments supplied to get command");
             insufficientArgs();
             return;
