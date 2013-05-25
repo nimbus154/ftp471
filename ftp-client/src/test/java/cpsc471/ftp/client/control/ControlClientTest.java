@@ -121,9 +121,11 @@ public class ControlClientTest {
     public void testPutFileExists() throws Exception {
 
         String fileName = "fileToUpload";
+        long size = 10;
         File mockFile = mock(File.class);
         when(mockFile.exists()).thenReturn(true);
         when(mockFile.getName()).thenReturn(fileName);
+        when(mockFile.length()).thenReturn(size);
 
         client.put(mockFile);
 
@@ -138,8 +140,13 @@ public class ControlClientTest {
                 fileName,
                 "\"put\" command improperly written to socket: fileName not written"
         );
+        Assert.assertEquals(
+                dataSent[2],
+                Long.toString(size),
+                "\"put\" command improperly written to socket: file size not written"
+        );
 
-        assertPortSent(dataSent, 2);
+        assertPortSent(dataSent, 3);
     }
 
     /**

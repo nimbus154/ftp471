@@ -55,8 +55,8 @@ public class ControlClientImpl implements ControlClient {
         DataChannelServer dataChannel = new DataChannelServer();
         socketWriter.println(dataChannel.getPort());
         socketWriter.flush();
-        dataChannel.accept(); // accept connection, returns when connection established
-        dataChannel.download(null); // will print to stdout
+        //dataChannel.accept(); // accept connection, returns when connection established
+        // dataChannel.download(null); // will print to stdout
     }
 
     @Override
@@ -77,6 +77,7 @@ public class ControlClientImpl implements ControlClient {
         if(localFile.exists()) {
             socketWriter.println("put");
             socketWriter.println(localFile.getName());
+            socketWriter.println(localFile.length());
 
             DataChannelServer dataChannel = new DataChannelServer();
             socketWriter.println(dataChannel.getPort());
