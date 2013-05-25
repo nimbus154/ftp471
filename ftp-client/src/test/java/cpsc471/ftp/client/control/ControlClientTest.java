@@ -167,7 +167,7 @@ public class ControlClientTest {
      */
     public void testGetFileExists() throws Exception {
 
-        inputStream = new ByteArrayInputStream("connecting".getBytes());
+        inputStream = new ByteArrayInputStream("1000\nconnecting\n".getBytes());
         when(socket.getInputStream()).thenReturn(inputStream);
         client.setSocket(socket);
         String fileName = "serverFile";
