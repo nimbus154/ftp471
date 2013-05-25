@@ -9,16 +9,24 @@
   <url>http://maven.apache.org</url>
 
   <modules>
-	<module>ftp-server</module>
+      <module>ftp-data-channel</module>
+      <module>ftp-server</module>
 	<module>ftp-client</module>
-    <module>ftp-data-channel</module>
   </modules>
 
     <properties>
         <powermock.version>1.5</powermock.version>
     </properties>
 
-  <dependencies>
+    <repositories>
+        <repository>
+            <id>ftp</id>
+            <name>Ftp</name>
+            <url>file:///${basedir}/ftp-data-channel/target</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
       <dependency>
           <groupId>org.powermock</groupId>
           <artifactId>powermock-module-testng</artifactId>
