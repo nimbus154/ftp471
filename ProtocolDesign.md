@@ -68,8 +68,15 @@ secret_knowledge.txt\n
 
 ###### Server Response
 ```
+[file size in bytes]\n
 connecting\n
 ```
+Example: 
+```
+10000\n
+connecting\n
+```
+
 
 If insufficient arugments:
 ```
@@ -95,6 +102,7 @@ Format:
 ```
 put\n
 [file to upload]\n
+[size of file in bytes]\n
 [ephemeral port]\n
 ```
 Example:
