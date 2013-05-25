@@ -55,7 +55,7 @@ public class ControlWorkerTest {
     public void testLs() throws Exception {
 
         // populate a fake socket buffer with the ls command
-        fakeCommand("ls\n");
+        fakeCommand("ls\n1234\n");
 
         // create a worker spy so we can confirm which methods were invoked
         ControlWorker workerSpy = spy(worker);
@@ -94,7 +94,7 @@ public class ControlWorkerTest {
      */
     public void testPut() throws Exception {
 
-        fakeCommand("put\nfileToUpload\n");
+        fakeCommand("put\nfileToUpload\n1234\n");
 
         // create a worker spy so we can confirm which methods were invoked
         ControlWorker workerSpy = spy(worker);
@@ -214,7 +214,7 @@ public class ControlWorkerTest {
      */
     public void testGetFileNotFound() throws Exception {
 
-        fakeCommand("fileName");
+        fakeCommand("fileName\n1234\n");
 
         worker.get();
 
