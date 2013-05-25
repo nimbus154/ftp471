@@ -103,17 +103,19 @@ public class ControlClientImpl implements ControlClient {
         socketWriter.println(dataChannel.getPort());
         socketWriter.flush();
 
-        String serverResponse = null;
+        long fileSize;
         try {
-            serverResponse = socketReader.readLine();
+            fileSize = Long.parseLong(socketReader.readLine());
         }
         catch (IOException e) {
+            // if nothing in socket
             logger.warn("Unable to read from socket: " + e.getMessage(), e);
         }
-
-        if(!serverResponse.equals("connecting")) {
-            throw new FileNotFoundException("Server could not find file.");
+        catch(NumberFormatException e) {
+            // if a value other than a file size is returned
+            throw new FileNotFoundException("Server could not find file");
         }
+
         // download file, catch errors
         // this may not work b/c of waiting for response from server
     }
