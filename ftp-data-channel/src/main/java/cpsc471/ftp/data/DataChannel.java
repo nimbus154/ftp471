@@ -32,12 +32,19 @@ public abstract class DataChannel {
 
     /**
      * Download a file
-     * @param file file to download
+     * @param file file in which to store download
+     * @param size size of file to download
      */
-    public void download(File file) throws IOException {
+    public void download(File file, long size) throws IOException {
 
-        // todo implement
-    };
+        FileChannel fileChannel = new FileOutputStream(file).getChannel();
+
+        fileChannel.transferFrom(
+                socketChannel, // channel from which to retrieve bytes
+                0,
+                size
+        );
+    }
 
     /**
      * Upload a file
