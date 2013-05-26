@@ -19,6 +19,7 @@ Both the client and server use bash wrappers, so you don't have to invoke them
 with `java -jar <jar name>`.
 
 ### Server
+The server bash wrapper is located in ftp-server.
 ```bash
 ./serv <port to listen on>
 ```
@@ -29,6 +30,7 @@ Ex:
 ```
 
 ### Client
+The server bash wrapper is located in ftp-client.
 ```bash
 ./cli <host> <port>
 ```
