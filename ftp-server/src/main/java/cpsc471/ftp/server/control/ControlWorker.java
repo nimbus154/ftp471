@@ -3,7 +3,7 @@ package cpsc471.ftp.server.control;
 import cpsc471.ftp.data.DataChannelClient;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
-
+import org.apache.commons.io.IOUtils;
 import java.io.*;
 import java.net.Socket;
 
@@ -23,6 +23,7 @@ public class ControlWorker implements Runnable {
     public static final String CONNECTING_MESSAGE = "connecting";
     public static final String INSUFFICIENT_ARGS_MESSAGE = "insufficient arguments";
     public static final String FILE_NOT_FOUND_MESSAGE = "not found";
+    public static final String INTERNAL_ERROR_MESSAGE = "internal error";
 
     /**
      * Create a worker to handle a connection
@@ -105,10 +106,16 @@ public class ControlWorker implements Runnable {
             insufficientArgs();
             return;
         }
-        String lsResult = doLs();
-        // send client number of bytes to expect from ls command
-        String[] args = {Integer.toString(lsResult.getBytes().length)};
-        connect(args); // send message "connecting" to client
+        try {
+            String lsResult = doLs();
+            // send client number of bytes to expect from ls command
+            String[] args = {Integer.toString(lsResult.getBytes().length)};
+            connect(args); // send message "connecting" to client
+        }
+        catch(IOException e) {
+            internalError();
+            return;
+        }
 
         // transfer data
         try {
@@ -128,10 +135,20 @@ public class ControlWorker implements Runnable {
      * Perform the ls command
      * @return a string containing the results of the `ls`
      */
-    private String doLs() {
+    private String doLs() throws IOException {
 
-        // todo invoke the ls command
-        return "this is the result of ls";
+        // thanks to http://blog.art-of-coding.eu/executing-operating-system-commands-from-java/
+        Process ls = Runtime.getRuntime().exec("ls");
+        StringWriter stringWriter = new StringWriter();
+
+        // thanks to http://stackoverflow.com/questions/309424/read-convert-an-inputstream-to-a-string
+        IOUtils.copy(
+                ls.getInputStream(), // output of ls command
+                stringWriter,
+                "UTF-8"
+        );
+
+        return stringWriter.toString();
     }
 
     /**
@@ -289,6 +306,15 @@ public class ControlWorker implements Runnable {
     private void insufficientArgs() {
 
         socketWriter.println(INSUFFICIENT_ARGS_MESSAGE);
+        socketWriter.flush();
+    }
+
+    /**
+     * An internal error occurred
+     */
+    private void internalError() {
+
+        socketWriter.println(INTERNAL_ERROR_MESSAGE);
         socketWriter.flush();
     }
 
