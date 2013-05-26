@@ -137,8 +137,9 @@ public class Shell {
         if(args.length == 2) {
             String fileToDownload = args[1];
             try {
-                client.get(fileToDownload);
-                System.out.println("Downloaded " + fileToDownload);
+                long bytesTransferred = client.get(fileToDownload);
+                System.out.println("Downloaded " + fileToDownload
+                        + " (" + bytesTransferred + " bytes)");
             }
             catch (IOException e) {
                 System.err.println(
@@ -161,8 +162,9 @@ public class Shell {
         if(args.length == 2) {
             String fileToUpload = args[1];
             try {
-                client.put(fileToUpload);
-                System.out.println("Uploaded " + fileToUpload);
+                long bytesTransferred = client.put(fileToUpload);
+                System.out.println("Uploaded " + fileToUpload
+                        + " (" + bytesTransferred + " bytes)");
             }
             catch (IOException e) {
                 System.err.println(
@@ -181,7 +183,8 @@ public class Shell {
      */
     public void handleLs() {
         try {
-            client.ls();
+            long bytesTransferred = client.ls();
+            System.out.println("(" + bytesTransferred + " bytes received)");
         }
         catch(IOException e) {
             System.err.println("Unable to retrieve file listing from server");
