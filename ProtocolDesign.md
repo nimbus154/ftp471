@@ -177,3 +177,5 @@ or strings.
 
 TCP buffer overflows are managed by passing the expected size of data to the data
 channel.
+
+String data is transferred as UTF-8. Files are transferred as raw bytes.
