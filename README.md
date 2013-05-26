@@ -2,6 +2,8 @@
 
 A bare-bones FTP server. Final class project for CPSC471: Computer Networking.
 
+[The source code for project is available on GitHub](https://github.com/nimbus154/ftp471).
+
 ## Dependencies
 You will need to install these two programs in order to build and run ftp471:
  * JDK 7
@@ -19,7 +21,7 @@ Both the client and server use bash wrappers, so you don't have to invoke them
 with `java -jar <jar name>`.
 
 ### Server
-The server bash wrapper is located in ftp-server.
+The server bash wrapper is located in the ftp-server directory.
 ```bash
 ./serv <port to listen on>
 ```
@@ -30,7 +32,7 @@ Ex:
 ```
 
 ### Client
-The server bash wrapper is located in ftp-client.
+The server bash wrapper is located in the ftp-client directory.
 ```bash
 ./cli <host> <port>
 ```
