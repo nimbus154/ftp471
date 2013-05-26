@@ -45,7 +45,8 @@ public class ControlWorker implements Runnable {
 
     @Override
     public void run() {
-        logger.info("Servicing connection");
+        logger.info("Servicing connection "
+                + socket.getRemoteSocketAddress());
 
         while(!socket.isClosed()) {
             handleCmd();
@@ -55,7 +56,6 @@ public class ControlWorker implements Runnable {
     public void handleCmd() {
         try {
             String cmd = socketReader.readLine();
-            logger.info("Read " + cmd);
 
             switch(cmd) {
                 case "ls":
@@ -71,6 +71,7 @@ public class ControlWorker implements Runnable {
                     quit();
                     break;
                 default:
+                    logger.warn("Unrecognized command: " + cmd);
                     break;
             }
         }
@@ -84,12 +85,14 @@ public class ControlWorker implements Runnable {
      */
     public void quit() {
 
-        logger.info("Closing connection");
         try {
             socket.close();
+            System.out.println("Closed connection with "
+                    + socket.getRemoteSocketAddress());
+
         }
         catch (IOException e) {
-            logger.warn("Unable to close socket: " + e.getMessage(), e);
+            failMessage("quit", "Unable to close connection: " + e.getMessage());
         }
     }
 
@@ -98,12 +101,10 @@ public class ControlWorker implements Runnable {
      */
     public void ls() {
 
-        logger.info("handling \"ls\"");
-
         int port = nextNum();
         if(port == 0) {
-            logger.warn("Insufficient arguments supplied to ls command");
             insufficientArgs();
+            failMessage("ls", "insufficient arguments");
             return;
         }
         try {
@@ -114,6 +115,7 @@ public class ControlWorker implements Runnable {
         }
         catch(IOException e) {
             internalError();
+            failMessage("ls", e.getMessage());
             return;
         }
 
@@ -126,10 +128,9 @@ public class ControlWorker implements Runnable {
             System.out.println("ls succeeded");
         }
         catch(IOException e) {
-            System.err.println("ls failed: " + e.getMessage());
+            failMessage("ls", e.getMessage());
         }
     }
-
 
     /**
      * Perform the ls command
@@ -159,17 +160,16 @@ public class ControlWorker implements Runnable {
         String fileName = nextArg();
         int port = nextNum();
         if(fileName == null  || port == 0) {
-            logger.warn("Insufficient arguments supplied to get command");
             insufficientArgs();
+            failMessage("get \"" + fileName + "\"", "insufficient arguments");
             return;
         }
         else if(!isValidFile(fileName)) {
-            logger.warn("File \"" + fileName + "\" not found");
             notFound();
+            failMessage("get \"" + fileName + "\"", "file not found");
             return;
         }
 
-        logger.info("handling \"get\" " + fileName);
         // respond to request with "connecting"
         File file = new File(fileName);
         String[] args = {Long.toString(file.length())};
@@ -184,9 +184,12 @@ public class ControlWorker implements Runnable {
             System.out.println("get \"" + fileName + "\" succeeded");
         }
         catch(IOException e) {
-            System.err.println("get \"" + fileName + "\" failed: "
-                    + e.getMessage());
+            failMessage("get \"" + fileName + "\"", e.getMessage());
         }
+    }
+
+    private void failMessage(String cmd, String reason) {
+        System.err.println(cmd + " failed: " + reason);
     }
 
     /**
@@ -198,13 +201,12 @@ public class ControlWorker implements Runnable {
         int fileSize = nextNum();
         int port = nextNum();
         if(fileName == null || fileSize == 0 || port == 0) {
-            logger.warn("Insufficient arguments supplied to put command");
             insufficientArgs();
+            failMessage("put \"" + fileName + "\"", "insufficient arguments");
             return;
         }
 
         // fileName will always be the second line
-        logger.info("handling \"put " + fileName + "\"");
         connect(null);
         File file = new File(fileName);
         // open socket connection to client
