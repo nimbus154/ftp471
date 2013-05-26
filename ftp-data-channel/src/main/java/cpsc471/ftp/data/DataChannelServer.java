@@ -34,6 +34,13 @@ public class DataChannelServer extends DataChannel {
         setSocketChannel(serverSocketChannel.accept());
     }
 
+    @Override
+    public void close() throws IOException {
+
+        super.close();
+        serverSocketChannel.close();
+    }
+
     public int getPort() {
 
         try {

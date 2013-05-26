@@ -99,7 +99,7 @@ public class ControlWorker implements Runnable {
 
         logger.info("handling \"ls\"");
 
-        int port = extractPort();
+        int port = nextNum();
         if(port == 0) {
             logger.warn("Insufficient arguments supplied to ls command");
             insufficientArgs();
@@ -126,14 +126,14 @@ public class ControlWorker implements Runnable {
     public void get() {
 
         String fileName = nextArg();
-        int port = extractPort();
+        int port = nextNum();
         if(fileName == null  || port == 0) {
             logger.warn("Insufficient arguments supplied to get command");
             insufficientArgs();
             return;
         }
         else if(!isValidFile(fileName)) {
-            logger.warn("Requested file not found");
+            logger.warn("File \"" + fileName + "\" not found");
             notFound();
             return;
         }
@@ -154,8 +154,9 @@ public class ControlWorker implements Runnable {
     public void put() {
 
         String fileName = nextArg();
-        int port = extractPort();
-        if(fileName == null || port == 0) {
+        int fileSize = nextNum();
+        int port = nextNum();
+        if(fileName == null || fileSize == 0 || port == 0) {
             logger.warn("Insufficient arguments supplied to put command");
             insufficientArgs();
             return;
@@ -164,8 +165,19 @@ public class ControlWorker implements Runnable {
         // fileName will always be the second line
         logger.info("handling \"put " + fileName + "\"");
         connect(null);
+        File file = new File(fileName);
         // open socket connection to client
         // download file from client
+        try {
+            DataChannelClient dataChannel =
+                    new DataChannelClient(socket.getInetAddress(), port);
+            // todo figure out how to do ls from java
+            dataChannel.download(file, fileSize);
+            dataChannel.close();
+        }
+        catch(IOException e) {
+            // todo handle io exception
+        }
     }
 
     /**
@@ -194,7 +206,7 @@ public class ControlWorker implements Runnable {
      * Extracts a port number from the argument list
      * @return port number or 0 on failure
      */
-    private int extractPort() {
+    private int nextNum() {
 
         String rawArgument = nextArg();
         int port = 0;

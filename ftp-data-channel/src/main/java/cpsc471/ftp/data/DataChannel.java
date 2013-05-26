@@ -44,6 +44,7 @@ public abstract class DataChannel {
                 0,
                 size
         );
+        fileChannel.close();
     }
 
     /**
@@ -63,6 +64,7 @@ public abstract class DataChannel {
                     socketChannel // channel to which to send bytes
             );
         }
+        fileChannel.close();
     }
 
     /**

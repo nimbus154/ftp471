@@ -82,7 +82,10 @@ public class ControlClientImpl implements ControlClient {
             DataChannelServer dataChannel = new DataChannelServer();
             socketWriter.println(dataChannel.getPort());
             socketWriter.flush();
-            // upload file, catch errors
+
+            dataChannel.accept(); // accept data channel connection
+            dataChannel.upload(localFile); // once accepted, upload
+            dataChannel.close();
         }
         else {
             throw new FileNotFoundException(
