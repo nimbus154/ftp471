@@ -53,7 +53,7 @@ public class ControlClientImpl implements ControlClient {
     }
 
     @Override
-    public void ls() throws IOException {
+    public long ls() throws IOException {
 
         socketWriter.println("ls");
         DataChannelServer dataChannel = new DataChannelServer();
@@ -61,18 +61,21 @@ public class ControlClientImpl implements ControlClient {
         socketWriter.flush();
 
         long bytesToReceive = extractBytesToReceive();
+        long bytesReceived = 0;
 
         if(serverWantsToConnect()) {
             dataChannel.accept(); // accept connection, returns when connection established
-            dataChannel.download(bytesToReceive); // will print to stdout
+            bytesReceived = dataChannel.download(bytesToReceive); // will print to stdout
+            dataChannel.close();
         }
+        return bytesReceived;
     }
 
     @Override
-    public void put(String localFile)
+    public long put(String localFile)
         throws FileNotFoundException, IOException {
 
-        put(new File(localFile));
+        return put(new File(localFile));
     }
 
     /**
@@ -80,7 +83,7 @@ public class ControlClientImpl implements ControlClient {
      * @param localFile the file to upload
      * @throws FileNotFoundException file to upload
      */
-    public void put(File localFile)
+    public long put(File localFile)
             throws FileNotFoundException, IOException {
 
         if(localFile.exists()) {
@@ -92,11 +95,14 @@ public class ControlClientImpl implements ControlClient {
             socketWriter.println(dataChannel.getPort());
             socketWriter.flush();
 
+            long bytesSent = 0;
             if(serverWantsToConnect()) {
                 dataChannel.accept(); // accept data channel connection
-                dataChannel.upload(localFile); // once accepted, upload
+                bytesSent = dataChannel.upload(localFile); // once accepted, upload
                 dataChannel.close();
             }
+
+            return bytesSent;
         }
         else {
             throw new FileNotFoundException(
@@ -106,7 +112,7 @@ public class ControlClientImpl implements ControlClient {
     }
 
     @Override
-    public void get(String remoteFile)
+    public long get(String remoteFile)
         throws FileNotFoundException, IOException {
 
         // send get request to server
@@ -119,11 +125,14 @@ public class ControlClientImpl implements ControlClient {
 
         long fileSize = extractBytesToReceive();
 
+        long bytesReceived = 0;
         if(serverWantsToConnect()) {
             dataChannel.accept(); // accept data channel connection
-            dataChannel.download(new File(remoteFile), fileSize); // once accepted, upload
+            bytesReceived = dataChannel.download(new File(remoteFile), fileSize); // once accepted, upload
             dataChannel.close();
         }
+
+        return bytesReceived;
     }
 
     @Override

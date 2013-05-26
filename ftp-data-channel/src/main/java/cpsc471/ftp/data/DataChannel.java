@@ -35,9 +35,10 @@ public abstract class DataChannel {
     /**
      * Download data to stdout
      * @param length length of byte stream to receive
+     * @return number of bytes received from server
      * @throws IOException
      */
-    public void download(long length) throws IOException {
+    public long download(long length) throws IOException {
 
         ByteBuffer byteBuffer = ByteBuffer.allocate((int)length);
         socketChannel.read(byteBuffer);
@@ -46,14 +47,16 @@ public abstract class DataChannel {
 
         CharBuffer charBuffer = Charset.forName("UTF-8").decode(byteBuffer);
         System.out.println(charBuffer.toString());
+        return charBuffer.length();
     }
 
     /**
      * Download a file
      * @param file file in which to store download
      * @param size size of file to download
+     * @return number of bytes received from server
      */
-    public void download(File file, long size) throws IOException {
+    public long download(File file, long size) throws IOException {
 
         FileChannel fileChannel = new FileOutputStream(file).getChannel();
 
@@ -62,14 +65,17 @@ public abstract class DataChannel {
                 0,
                 size
         );
+        long trueFileLength = fileChannel.size();
         fileChannel.close();
+        return trueFileLength;
     }
 
     /**
      * Upload a file
      * @param file file to upload
+     * @return the number of bytes sent
      */
-    public void upload(File file) throws IOException {
+    public long upload(File file) throws IOException {
 
         FileChannel fileChannel = new FileInputStream(file).getChannel();
 
@@ -83,20 +89,24 @@ public abstract class DataChannel {
             );
         }
         fileChannel.close();
+        return bytesSent;
     }
 
     /**
      * Upload a large string
      * @param s string to upload
+     * @return the number of bytes sent
      * @throws IOException thrown if connection issue
      */
-    public void upload(String s) throws IOException {
+    public long upload(String s) throws IOException {
 
         // thanks to http://stackoverflow.com/questions/871870/how-to-write-data-to-socket-channel
         // for character encoding/decoding
+        CharBuffer charBuffer = CharBuffer.wrap(s);
         socketChannel.write(
-                Charset.forName("UTF-8").encode(CharBuffer.wrap(s))
+                Charset.forName("UTF-8").encode(charBuffer)
         );
+        return charBuffer.length();
     };
 
     /**
