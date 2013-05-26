@@ -88,8 +88,6 @@ If file not found:
 not found\n
 ```
 
-If no file with that name exists, the server reponds with a `not found` message.
-
 ##### `put` Message
 `put` uploads a file to the server.  If a file with that name already exists on
 the server, the file will be overwritten.
@@ -109,6 +107,7 @@ Example:
 ```
 put\n
 secret_knowledge.txt\n
+256\n
 1234\n
 ```
 
@@ -144,8 +143,16 @@ ls\n
 ```
 
 ###### Server Response
+
 ```
-connecting
+[length of ls response in bytes]\n
+connecting\n
+```
+
+Example:
+```
+24\n
+connecting\n
 ```
 
 If insufficient arugments:
@@ -153,11 +160,20 @@ If insufficient arugments:
 insufficient arguments\n
 ```
 
-### Data Channel
-The data channel is where files are actually transferred. At this time, I'm not
-exactly sure how this will work. Since it uses sendfile, I don't think this will
-be as involved.
+If there's an error with the server's interal state:
+```
+internal error\n
+```
 
-I must handle: 
- * throttling sender
- * errors in file transfer
+### Data Channel
+The data channel is where files are actually transferred. The channel is very
+simple: it only sends or receives raw data. The control channel tells the data
+channel whether it should send or receive. The control channel also tells
+the data channel how much data it should receive. It is the data channel's
+responsibility to ensure all the data arrives.
+
+The data channel has two operations: upload and download. It can transfer files
+or strings.
+
+TCP buffer overflows are managed by passing the expected size of data to the data
+channel.
