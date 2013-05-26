@@ -59,20 +59,11 @@ public class ControlClientImpl implements ControlClient {
         DataChannelServer dataChannel = new DataChannelServer();
         socketWriter.println(dataChannel.getPort());
         socketWriter.flush();
-        String response;
-        try {
-            response = socketReader.readLine(); // should say "connecting"
-            if(!response.equals(CONNECTING_MESSAGE )) {
-                throw new IOException("Error: " + response);
-            }
+
+        if(serverWantsToConnect()) {
+            //dataChannel.accept(); // accept connection, returns when connection established
+            // dataChannel.download(null); // will print to stdout
         }
-        catch (IOException e) {
-            // if nothing in socket
-            logger.warn("Unable to read from socket: " + e.getMessage(), e);
-            throw new IOException(e.getMessage());
-        }
-        //dataChannel.accept(); // accept connection, returns when connection established
-        // dataChannel.download(null); // will print to stdout
     }
 
     @Override
@@ -99,22 +90,11 @@ public class ControlClientImpl implements ControlClient {
             socketWriter.println(dataChannel.getPort());
             socketWriter.flush();
 
-            String response;
-            try {
-                response = socketReader.readLine(); // should say "connecting"
-                if(!response.equals(CONNECTING_MESSAGE )) {
-                    throw new IOException("Error: " + response);
-                }
+            if(serverWantsToConnect()) {
+                dataChannel.accept(); // accept data channel connection
+                dataChannel.upload(localFile); // once accepted, upload
+                dataChannel.close();
             }
-            catch (IOException e) {
-                // if nothing in socket
-                logger.warn("Unable to read from socket: " + e.getMessage(), e);
-                throw new IOException(e.getMessage());
-            }
-
-            dataChannel.accept(); // accept data channel connection
-            dataChannel.upload(localFile); // once accepted, upload
-            dataChannel.close();
         }
         else {
             throw new FileNotFoundException(
@@ -135,26 +115,13 @@ public class ControlClientImpl implements ControlClient {
         socketWriter.println(dataChannel.getPort());
         socketWriter.flush();
 
-        long fileSize = 0;
-        String arg = null;
-        try {
-            arg = socketReader.readLine(); // file size
-            socketReader.readLine(); // "connecting"
-            fileSize = Long.parseLong(arg);
+        long fileSize = extractFileSize();
+
+        if(serverWantsToConnect()) {
+            dataChannel.accept(); // accept data channel connection
+            dataChannel.download(new File(remoteFile), fileSize); // once accepted, upload
+            dataChannel.close();
         }
-        catch (IOException e) {
-            // if nothing in socket
-            logger.warn("Unable to read from socket: " + e.getMessage(), e);
-            throw new IOException(e.getMessage());
-        }
-        catch(NumberFormatException e) {
-            // if a value other than a file size is returned
-            logger.warn("Error parsing a long from arg: " + arg);
-            throw new FileNotFoundException("Server could not find file");
-        }
-        dataChannel.accept(); // accept data channel connection
-        dataChannel.download(new File(remoteFile), fileSize); // once accepted, upload
-        dataChannel.close();
     }
 
     @Override
@@ -168,6 +135,60 @@ public class ControlClientImpl implements ControlClient {
         }
         catch (IOException e) {
             logger.warn("Unable to close socket:" + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Extract the file size from the server
+     * @return size of file to download
+     * @throws FileNotFoundException if server couldn't find file
+     * @throws IOException if another error occurred
+     */
+    private long extractFileSize()
+        throws FileNotFoundException, IOException {
+
+        String arg = null;
+        long fileSize = 0;
+        try {
+            arg = socketReader.readLine(); // file size
+            fileSize = Long.parseLong(arg);
+        }
+        catch (IOException e) {
+            // if nothing in socket
+            logger.warn("Unable to read from socket: " + e.getMessage(), e);
+            throw new IOException(e.getMessage());
+        }
+        catch(NumberFormatException e) {
+            // if a value other than a file size is returned
+            logger.warn("Error parsing a long from arg: " + arg);
+            throw new FileNotFoundException("Server could not find file");
+        }
+        return fileSize;
+    }
+
+    /**
+     * Checks if server is trying to connect to client for data transfer
+     * @return true if trying to connect
+     * @throws IOException if unable to read from socket
+     */
+    private boolean serverWantsToConnect() throws IOException {
+
+        String response;
+        try {
+            response = socketReader.readLine(); // should say "connecting"
+            if(response == null) {
+                throw new IOException("Server did not respond according to protocol: "
+                    + "it did not provide a response to client request.");
+            }
+            if(!response.equals(CONNECTING_MESSAGE )) {
+                throw new IOException("Error: " + response);
+            }
+            return true;
+        }
+        catch (IOException e) {
+            // if nothing in socket
+            logger.warn("Unable to read from socket: " + e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
