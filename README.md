@@ -4,6 +4,9 @@ A bare-bones FTP server. Final class project for CPSC471: Computer Networking.
 
 [The source code for project is available on GitHub](https://github.com/nimbus154/ftp471).
 
+Please note that this project has only been tested in Linux. The `ls` command
+will not work in a Windows environment.
+
 ## Dependencies
 You will need to install these two programs in order to build and run ftp471:
  * JDK 7
