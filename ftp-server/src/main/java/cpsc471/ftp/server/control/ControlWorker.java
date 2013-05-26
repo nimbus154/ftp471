@@ -114,10 +114,22 @@ public class ControlWorker implements Runnable {
             // todo figure out how to do ls from java
             dataChannel.upload("list of file contents");
             dataChannel.close();
+            System.out.println("ls succeeded");
         }
         catch(IOException e) {
-            // todo handle io exception
+            System.err.println("ls failed: " + e.getMessage());
         }
+    }
+
+
+    /**
+     * Perform the ls command
+     * @return a string containing the results of the `ls`
+     */
+    private String doLs() {
+
+        // todo invoke the ls command
+        return "this is the result of ls";
     }
 
     /**
@@ -150,9 +162,11 @@ public class ControlWorker implements Runnable {
                     new DataChannelClient(socket.getInetAddress(), port);
             dataChannel.upload(file);
             dataChannel.close();
+            System.out.println("get \"" + fileName + "\" succeeded");
         }
         catch(IOException e) {
-            // todo handle io exception
+            System.err.println("get \"" + fileName + "\" failed: "
+                    + e.getMessage());
         }
     }
 
@@ -182,9 +196,11 @@ public class ControlWorker implements Runnable {
             // todo figure out how to do ls from java
             dataChannel.download(file, fileSize);
             dataChannel.close();
+            System.out.println("put \"" + fileName + "\" succeeded");
         }
         catch(IOException e) {
-            // todo handle io exception
+            System.err.println("put \"" + fileName + "\" failed: "
+                    + e.getMessage());
         }
     }
 
