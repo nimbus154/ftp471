@@ -135,8 +135,10 @@ public class Shell {
     public void handleGet(String[] args) {
 
         if(args.length == 2) {
+            String fileToDownload = args[1];
             try {
-                client.get(args[1]);
+                client.get(fileToDownload);
+                System.out.println("Downloaded " + fileToDownload);
             }
             catch (IOException e) {
                 System.err.println(
@@ -157,8 +159,10 @@ public class Shell {
     public void handlePut(String[] args) {
 
         if(args.length == 2) {
+            String fileToUpload = args[1];
             try {
-                client.put(args[1]);
+                client.put(fileToUpload);
+                System.out.println("Uploaded " + fileToUpload);
             }
             catch (IOException e) {
                 System.err.println(
