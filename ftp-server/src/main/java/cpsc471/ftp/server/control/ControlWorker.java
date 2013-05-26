@@ -138,14 +138,22 @@ public class ControlWorker implements Runnable {
             return;
         }
 
-        logger.info("handling \"get\"");
+        logger.info("handling \"get\" " + fileName);
         // respond to request with "connecting"
         File file = new File(fileName);
         String[] args = {Long.toString(file.length())};
         connect(args);
 
-        // open socket connection to client
-        // "upload" file from client
+        // "upload" file to client
+        try {
+            DataChannelClient dataChannel =
+                    new DataChannelClient(socket.getInetAddress(), port);
+            dataChannel.upload(file);
+            dataChannel.close();
+        }
+        catch(IOException e) {
+            // todo handle io exception
+        }
     }
 
     /**
