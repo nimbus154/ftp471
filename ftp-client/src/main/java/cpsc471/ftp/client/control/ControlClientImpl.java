@@ -25,6 +25,8 @@ public class ControlClientImpl implements ControlClient {
 
     private BufferedReader socketReader;
 
+    private static final String CONNECTING_MESSAGE = "connecting";
+
     /**
      * Create a ControlClient
      * @param domainName domainName name of server to which to connect
@@ -38,6 +40,8 @@ public class ControlClientImpl implements ControlClient {
         this.port = port;
 
         setSocket(new Socket(domainName, port));
+
+        BasicConfigurator.configure(); // configure log4j
     }
 
     /**
@@ -55,6 +59,18 @@ public class ControlClientImpl implements ControlClient {
         DataChannelServer dataChannel = new DataChannelServer();
         socketWriter.println(dataChannel.getPort());
         socketWriter.flush();
+        String response;
+        try {
+            response = socketReader.readLine(); // should say "connecting"
+            if(!response.equals(CONNECTING_MESSAGE )) {
+                throw new IOException("Error: " + response);
+            }
+        }
+        catch (IOException e) {
+            // if nothing in socket
+            logger.warn("Unable to read from socket: " + e.getMessage(), e);
+            throw new IOException(e.getMessage());
+        }
         //dataChannel.accept(); // accept connection, returns when connection established
         // dataChannel.download(null); // will print to stdout
     }
@@ -83,6 +99,19 @@ public class ControlClientImpl implements ControlClient {
             socketWriter.println(dataChannel.getPort());
             socketWriter.flush();
 
+            String response;
+            try {
+                response = socketReader.readLine(); // should say "connecting"
+                if(!response.equals(CONNECTING_MESSAGE )) {
+                    throw new IOException("Error: " + response);
+                }
+            }
+            catch (IOException e) {
+                // if nothing in socket
+                logger.warn("Unable to read from socket: " + e.getMessage(), e);
+                throw new IOException(e.getMessage());
+            }
+
             dataChannel.accept(); // accept data channel connection
             dataChannel.upload(localFile); // once accepted, upload
             dataChannel.close();
@@ -107,8 +136,11 @@ public class ControlClientImpl implements ControlClient {
         socketWriter.flush();
 
         long fileSize = 0;
+        String arg = null;
         try {
-            fileSize = Long.parseLong(socketReader.readLine());
+            arg = socketReader.readLine(); // file size
+            socketReader.readLine(); // "connecting"
+            fileSize = Long.parseLong(arg);
         }
         catch (IOException e) {
             // if nothing in socket
@@ -117,6 +149,7 @@ public class ControlClientImpl implements ControlClient {
         }
         catch(NumberFormatException e) {
             // if a value other than a file size is returned
+            logger.warn("Error parsing a long from arg: " + arg);
             throw new FileNotFoundException("Server could not find file");
         }
         dataChannel.accept(); // accept data channel connection
