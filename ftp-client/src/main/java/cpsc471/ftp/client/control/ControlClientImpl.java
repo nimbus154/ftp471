@@ -60,9 +60,11 @@ public class ControlClientImpl implements ControlClient {
         socketWriter.println(dataChannel.getPort());
         socketWriter.flush();
 
+        long bytesToReceive = extractBytesToReceive();
+
         if(serverWantsToConnect()) {
-            //dataChannel.accept(); // accept connection, returns when connection established
-            // dataChannel.download(null); // will print to stdout
+            dataChannel.accept(); // accept connection, returns when connection established
+            dataChannel.download(bytesToReceive); // will print to stdout
         }
     }
 
@@ -115,7 +117,7 @@ public class ControlClientImpl implements ControlClient {
         socketWriter.println(dataChannel.getPort());
         socketWriter.flush();
 
-        long fileSize = extractFileSize();
+        long fileSize = extractBytesToReceive();
 
         if(serverWantsToConnect()) {
             dataChannel.accept(); // accept data channel connection
@@ -144,14 +146,14 @@ public class ControlClientImpl implements ControlClient {
      * @throws FileNotFoundException if server couldn't find file
      * @throws IOException if another error occurred
      */
-    private long extractFileSize()
+    private long extractBytesToReceive()
         throws FileNotFoundException, IOException {
 
         String arg = null;
-        long fileSize = 0;
+        long number = 0;
         try {
             arg = socketReader.readLine(); // file size
-            fileSize = Long.parseLong(arg);
+            number = Long.parseLong(arg);
         }
         catch (IOException e) {
             // if nothing in socket
@@ -163,7 +165,7 @@ public class ControlClientImpl implements ControlClient {
             logger.warn("Error parsing a long from arg: " + arg);
             throw new FileNotFoundException("Server could not find file");
         }
-        return fileSize;
+        return number;
     }
 
     /**

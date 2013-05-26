@@ -105,14 +105,16 @@ public class ControlWorker implements Runnable {
             insufficientArgs();
             return;
         }
-        connect(null); // send message "connecting" to client
+        String lsResult = doLs();
+        // send client number of bytes to expect from ls command
+        String[] args = {Integer.toString(lsResult.getBytes().length)};
+        connect(args); // send message "connecting" to client
 
         // transfer data
         try {
             DataChannelClient dataChannel =
                     new DataChannelClient(socket.getInetAddress(), port);
-            // todo figure out how to do ls from java
-            dataChannel.upload("list of file contents");
+            dataChannel.upload(doLs());
             dataChannel.close();
             System.out.println("ls succeeded");
         }
@@ -193,7 +195,6 @@ public class ControlWorker implements Runnable {
         try {
             DataChannelClient dataChannel =
                     new DataChannelClient(socket.getInetAddress(), port);
-            // todo figure out how to do ls from java
             dataChannel.download(file, fileSize);
             dataChannel.close();
             System.out.println("put \"" + fileName + "\" succeeded");
